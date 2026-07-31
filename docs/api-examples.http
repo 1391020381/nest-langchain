@@ -1,0 +1,67 @@
+@baseUrl = http://localhost:3000/api
+
+### 1. 基础模型调用
+POST {{baseUrl}}/langchain/chat
+Content-Type: application/json
+
+{
+  "message": "用一个 TypeScript 示例解释 RunnableSequence"
+}
+
+### 2. Runnable 并行处理
+POST {{baseUrl}}/langchain/runnables
+Content-Type: application/json
+
+{
+  "text": "LangChain 的 Runnable 接口让模型、提示词、解析器和自定义函数拥有统一组合方式。"
+}
+
+### 3. 结构化输出
+POST {{baseUrl}}/langchain/structured-output
+Content-Type: application/json
+
+{
+  "text": "生产环境登录后白屏，所有销售都无法工作，今天必须恢复。"
+}
+
+### 4. 添加知识
+POST {{baseUrl}}/knowledge/documents
+Content-Type: application/json
+
+{
+  "content": "退款规则：商品发货前可自动退款；发货后需要客服审核；已完成超过七天不能退款。",
+  "metadata": {
+    "source": "refund-policy.md",
+    "department": "support"
+  }
+}
+
+### 5. RAG 问答
+POST {{baseUrl}}/knowledge/ask
+Content-Type: application/json
+
+{
+  "question": "商品发货后能够直接退款吗？",
+  "topK": 4
+}
+
+### 6. 工具型 Agent
+POST {{baseUrl}}/agents/order-assistant
+Content-Type: application/json
+
+{
+  "message": "查询订单 A1001，并计算九折价格。",
+  "currentUserId": "user-1"
+}
+
+### 7. LangGraph 条件路由
+POST {{baseUrl}}/graphs/support-router
+Content-Type: application/json
+
+{
+  "message": "订单 A1001 已经发货，我想申请退款。",
+  "threadId": "learning-thread-1"
+}
+
+### 8. 导出 Mermaid
+GET {{baseUrl}}/graphs/support-router/mermaid
