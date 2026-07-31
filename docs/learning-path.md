@@ -2,6 +2,22 @@
 
 本项目假设你已经熟悉 NestJS。每一阶段先阅读对应代码，再修改实验变量并记录结果。
 
+## 当前学习进度
+
+- [x] 第 1 阶段：Models 与 Messages
+- [x] 第 2 阶段：Runnable 与结构化输出
+- [ ] 第 3 阶段：Tools
+- [ ] 第 4 阶段：RAG
+- [ ] 第 5 阶段：Agent
+- [ ] 第 6 阶段：LangGraph
+- [ ] 第 7 阶段：评估与生产化
+
+已完成阶段的详细总结：
+
+- [第一阶段总结：LangChain.js 基础能力](01-langchain-foundations-summary.md)
+
+当前下一步：进入第 3 阶段，学习 Tool Calling。
+
 ## 第 1 阶段：Models 与 Messages
 
 - 阅读 `src/langchain/model.factory.ts`。
