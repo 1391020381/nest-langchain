@@ -65,3 +65,11 @@ Content-Type: application/json
 
 ### 8. 导出 Mermaid
 GET {{baseUrl}}/graphs/support-router/mermaid
+
+### 9. 进阶练习 1：模型能力矩阵（每个模型会产生 4 次模型调用）
+POST {{baseUrl}}/exercises/01-model-capability-matrix
+Content-Type: application/json
+
+{
+  "models": ["model-a", "model-b"]
+}

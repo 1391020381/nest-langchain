@@ -6,13 +6,13 @@ import { ChatOpenAI, OpenAIEmbeddings } from '@langchain/openai';
 export class ModelFactory {
   constructor(private readonly config: ConfigService) {}
 
-  createChatModel(temperature = 0): ChatOpenAI {
+  createChatModel(temperature = 0, modelOverride?: string): ChatOpenAI {
     const apiKey = this.required('OPENAI_API_KEY');
     const baseURL = this.config.get<string>('OPENAI_BASE_URL');
 
     return new ChatOpenAI({
       apiKey,
-      model: this.config.get<string>('CHAT_MODEL') ?? 'gpt-5-mini',
+      model: modelOverride ?? this.config.get<string>('CHAT_MODEL') ?? 'gpt-5-mini',
       temperature,
       configuration: baseURL ? { baseURL } : undefined,
       maxRetries: 2,

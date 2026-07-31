@@ -15,8 +15,17 @@
 已完成阶段的详细总结：
 
 - [第一阶段总结：LangChain.js 基础能力](01-langchain-foundations-summary.md)
+- [LangChain 思想概念与常用 API 指南](02-langchain-concepts-and-api-guide.md)
 
 当前下一步：进入第 3 阶段，学习 Tool Calling。
+
+## 五组进阶练习进度
+
+- [ ] [练习 1：模型能力矩阵](exercises/01-model-capability-matrix.md)（进行中）
+- [ ] 练习 2：Runnable 组合
+- [ ] 练习 3：手动 Tool Calling
+- [ ] 练习 4：最小 RAG
+- [ ] 练习 5：故障和降级
 
 ## 第 1 阶段：Models 与 Messages
 
