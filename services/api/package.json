@@ -12,10 +12,13 @@
   },
   "dependencies": {
     "@autix/contracts": "workspace:*",
+    "@langchain/core": "^1.2.4",
+    "@langchain/openai": "^1.5.5",
     "@nestjs/common": "^11.0.0",
     "@nestjs/core": "^11.0.0",
     "@nestjs/platform-express": "^11.0.0",
     "js-yaml": "^5.2.3",
+    "langchain": "^1.5.4",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.0"
   },
