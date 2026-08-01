@@ -22,4 +22,17 @@ describe("LlmService demos", () => {
     const { result } = await service.chainInvoke(SAMPLE);
     expect(result.length).toBeGreaterThan(0);
   });
+
+  test("tool demo methods are defined", () => {
+    const service = new LlmService();
+    expect(typeof service.toolBindDemo).toBe("function");
+    expect(typeof service.toolLoopDemo).toBe("function");
+  });
+
+  test.skipIf(!hasKey)("toolBindDemo returns toolCalls array field", async () => {
+    const service = new LlmService();
+    const result = await service.toolBindDemo(SAMPLE);
+    expect(Array.isArray(result.toolCalls)).toBe(true);
+    expect(typeof result.result).toBe("string");
+  });
 });
