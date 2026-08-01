@@ -10,4 +10,16 @@ describe("LlmService demos", () => {
     const result = await service.invokeDemo(SAMPLE);
     expect(result.length).toBeGreaterThan(0);
   });
+
+  test("promptPreview renders without calling the model", async () => {
+    const service = new LlmService();
+    const { rendered } = await service.promptPreview(SAMPLE);
+    expect(rendered).toContain(SAMPLE);
+  });
+
+  test.skipIf(!hasKey)("chainInvoke returns non-empty text", async () => {
+    const service = new LlmService();
+    const { result } = await service.chainInvoke(SAMPLE);
+    expect(result.length).toBeGreaterThan(0);
+  });
 });
