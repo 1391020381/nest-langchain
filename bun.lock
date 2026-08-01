@@ -26,6 +26,23 @@
         "wait-on": "^9.0.5",
       },
     },
+    "clients/web": {
+      "name": "@autix/web",
+      "version": "0.0.0",
+      "dependencies": {
+        "@autix/contracts": "workspace:*",
+        "next": "16.2.3",
+        "react": "19.2.4",
+        "react-dom": "19.2.4",
+      },
+      "devDependencies": {
+        "@types/node": "^22",
+        "@types/react": "^19",
+        "@types/react-dom": "^19",
+        "typescript": "^5.7.0",
+        "wait-on": "^9.0.5",
+      },
+    },
     "packages/contracts": {
       "name": "@autix/contracts",
       "version": "0.0.0",
@@ -95,6 +112,8 @@
     "@autix/chat-web": ["@autix/chat-web@workspace:clients/chat-web"],
 
     "@autix/contracts": ["@autix/contracts@workspace:packages/contracts"],
+
+    "@autix/web": ["@autix/web@workspace:clients/web"],
 
     "@babel/code-frame": ["@babel/code-frame@7.29.7", "", { "dependencies": { "@babel/helper-validator-identifier": "^7.29.7", "js-tokens": "^4.0.0", "picocolors": "^1.1.1" } }, "sha512-Aup7aUOfpbAUg2ROOJN6Iw5f9DMBlzu0mIkm/malLQFN/YQgO48wCj0Kxa3sEHJvPVFg7siR+qRInwXd2qhQKw=="],
 
