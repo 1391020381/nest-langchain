@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from "@nestjs/common";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import {
   RequirementResultSchema,
@@ -34,7 +38,9 @@ export class RequirementService {
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "structured extract failed";
-      throw new Error(`Requirement extract failed: ${message}`);
+      throw new InternalServerErrorException(
+        `Requirement extract failed: ${message}`
+      );
     }
   }
 }

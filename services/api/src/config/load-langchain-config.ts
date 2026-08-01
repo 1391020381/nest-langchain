@@ -24,7 +24,7 @@ export type LangChainAppConfig = {
 };
 
 export function loadLangChainConfig(): LangChainAppConfig {
-  const filePath = path.join(process.cwd(), "config", "langchain.yaml");
+  const filePath = path.join(import.meta.dir, "../../config/langchain.yaml");
   const raw = fs.readFileSync(filePath, "utf8");
   return yaml.load(raw) as LangChainAppConfig;
 }

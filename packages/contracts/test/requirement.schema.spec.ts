@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { RequirementResultSchema, RequirementSchema } from "./index";
+import { RequirementResultSchema, RequirementSchema } from "../src/index";
 
 describe("Requirement schemas", () => {
   test("rejects empty input", () => {
