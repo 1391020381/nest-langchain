@@ -1,11 +1,34 @@
+# dependencies
 node_modules/
+.pnpm-store/
+
+# bun
+bun.lockb
+
+# build / cache
 dist/
+build/
+.next/
+.turbo/
 coverage/
+*.tsbuildinfo
+
+# env & secrets
 .env
 .env.*
 !.env.example
+
+# logs & OS
 *.log
-.idea/
-.vscode/
 .DS_Store
 Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# test / temp
+tmp/
+temp/
+.cache/
