@@ -1,0 +1,29 @@
+FROM oven/bun:1-alpine AS base
+WORKDIR /app
+
+COPY package.json bun.lock bunfig.toml turbo.json tsconfig.base.json ./
+COPY packages/contracts/package.json ./packages/contracts/
+COPY services/chat/package.json ./services/chat/
+COPY clients/chat-web/package.json ./clients/chat-web/
+
+RUN bun install --frozen-lockfile
+
+COPY packages/contracts ./packages/contracts
+COPY services/chat ./services/chat
+
+RUN bun run --filter=@autix/contracts build && bun run --filter=@autix/chat build
+
+FROM oven/bun:1-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+ENV PORT=4001
+
+COPY --from=base /app/package.json ./
+COPY --from=base /app/bun.lock ./
+COPY --from=base /app/node_modules ./node_modules
+COPY --from=base /app/packages ./packages
+COPY --from=base /app/services/chat ./services/chat
+
+WORKDIR /app/services/chat
+EXPOSE 4001
+CMD ["bun", "run", "dist/main.js"]

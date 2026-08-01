@@ -23,9 +23,24 @@
 
 - [x] 清空旧 Nest 练习脚手架
 - [x] 保留书稿并建立新学习路线
-- [ ] 第二章 monorepo 工程底座（尚未开始）
+- [x] 序章 / 第一章要点已对齐
+- [x] 第二章 monorepo 工程底座（`bun install` / API `/health` `/hello` / Web `:3002` 已验收）
 
-当前下一步：阅读序章与第一章，然后开始第二章。
+### 第二章启动
+
+```bash
+bun install
+bun run dev
+```
+
+- Web：<http://localhost:3002>（应显示 `llm`，点击「调用 API」）
+- Chat：<http://localhost:4001/hello>、<http://localhost:4001/health>
+
+可选 Compose：
+
+```bash
+docker compose -f infra/compose/compose.yaml -f infra/compose/compose.dev.yaml up --build
+```
 
 ## 可选对照仓库
 
