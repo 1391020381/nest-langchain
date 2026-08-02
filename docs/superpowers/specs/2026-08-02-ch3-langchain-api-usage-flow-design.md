@@ -233,7 +233,7 @@ ChatPromptTemplate ──formatMessages──► messages ──► 上述任一
 | 产物 | 路径 |
 |------|------|
 | 设计规格（本文） | `docs/superpowers/specs/2026-08-02-ch3-langchain-api-usage-flow-design.md` |
-| 读者向速查（已归档） | `docs/AI Agents 开发实践/5a-第三章附录：LangChain 编程 API 使用流程速查.md` |
+| 读者向速查（已归档） | `docs/5a-第三章附录：LangChain 编程 API 使用流程速查.md` |
 | 实施计划 | `docs/superpowers/plans/2026-08-02-ch3-langchain-api-usage-flow.md` |
 
 互链：课本第三章文首、`docs/learning-path.md` 第三章行。

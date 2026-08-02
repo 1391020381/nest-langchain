@@ -4,7 +4,7 @@ theme: channing-cyan
 
 ![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bff873d344b44ce0b7677ddc42290fa6~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=1080&h=589&s=813526&e=png&b=120f4a)
 
-> **附录速查**：[LangChain 编程 API 使用流程速查](./5a-第三章附录：LangChain%20编程%20API%20使用流程速查.md)（对象 → API → 返回值 → 业务主链串联）
+> **附录速查**：[LangChain 编程 API 使用流程速查](../5a-第三章附录：LangChain%20编程%20API%20使用流程速查.md)（对象 → API → 返回值 → 业务主链串联）
 
 前两章里，我们已经把工程底座搭了起来。接下来这一章要解决的，是一个更贴近真实开发的问题：当“调用一次模型”已经不够用时，怎样把它一步步整理成可维护、可扩展、可测试的服务端能力。
 

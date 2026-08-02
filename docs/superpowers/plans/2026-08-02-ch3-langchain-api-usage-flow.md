@@ -19,7 +19,7 @@
 ### Task 1: 读者向速查页
 
 **Files:**
-- Create: `docs/AI Agents 开发实践/5a-第三章附录：LangChain 编程 API 使用流程速查.md`
+- Create: `docs/5a-第三章附录：LangChain 编程 API 使用流程速查.md`
 - Modify: `docs/superpowers/specs/2026-08-02-ch3-langchain-api-usage-flow-design.md`（§9 落地路径）
 - Modify: `docs/AI Agents 开发实践/5-第三章：LangChain 起手——搭建第一条服务端能力链路.md`（文首互链）
 - Modify: `docs/learning-path.md`（第三章行增加附录链接）

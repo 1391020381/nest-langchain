@@ -1,7 +1,7 @@
 # 第三章附录：LangChain 编程 API 使用流程速查
 
-> 配套课本：[5-第三章：LangChain 起手——搭建第一条服务端能力链路](./5-第三章：LangChain%20起手——搭建第一条服务端能力链路.md)  
-> 设计规格：[2026-08-02-ch3-langchain-api-usage-flow-design](../superpowers/specs/2026-08-02-ch3-langchain-api-usage-flow-design.md)  
+> 配套课本：[5-第三章：LangChain 起手——搭建第一条服务端能力链路](./AI%20Agents%20开发实践/5-第三章：LangChain%20起手——搭建第一条服务端能力链路.md)  
+> 设计规格：[2026-08-02-ch3-langchain-api-usage-flow-design](./superpowers/specs/2026-08-02-ch3-langchain-api-usage-flow-design.md)  
 > 代码落点：`services/api/src/llm/*`  
 > 范围：**LangChain 编程 API**（不含 HTTP 路由清单）
 
