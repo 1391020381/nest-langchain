@@ -42,4 +42,41 @@ describe("LlmController", () => {
       BadRequestException
     );
   });
+
+  test("stream rejects empty input", async () => {
+    const controller = new LlmController(new LlmService());
+    const res = {
+      setHeader() {},
+      write() {},
+      end() {},
+    } as unknown as import("express").Response;
+    await expect(
+      controller.stream({ input: "" }, res)
+    ).rejects.toBeInstanceOf(BadRequestException);
+  });
+
+  test("stream writes chunk contents then ends", async () => {
+    const chunks: string[] = [];
+    let ended = false;
+    const service = {
+      streamDemo: async function* () {
+        yield { content: "hello" };
+        yield { content: " world" };
+      },
+    } as unknown as LlmService;
+    const controller = new LlmController(service);
+    const res = {
+      setHeader() {},
+      write(data: string) {
+        chunks.push(String(data));
+      },
+      end() {
+        ended = true;
+      },
+    } as unknown as import("express").Response;
+
+    await controller.stream({ input: SAMPLE }, res);
+    expect(chunks.join("")).toBe("hello world");
+    expect(ended).toBe(true);
+  });
 });

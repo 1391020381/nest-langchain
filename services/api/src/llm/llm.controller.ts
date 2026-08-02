@@ -127,4 +127,60 @@ export class LlmController {
       this.wrapError(error, "tool-loop failed");
     }
   }
+
+  @Post("stream")
+  async stream(
+    @Body() body: { input?: string },
+    @Res() res: Response
+  ) {
+    const input = this.requireInput(body);
+    res.setHeader("Content-Type", "text/event-stream");
+    res.setHeader("Cache-Control", "no-cache");
+    res.setHeader("Connection", "keep-alive");
+
+    try {
+      const stream = await this.llmService.streamDemo(input);
+      for await (const chunk of stream) {
+        const text =
+          typeof chunk?.content === "string"
+            ? chunk.content
+            : String(chunk?.content ?? "");
+        if (text) res.write(text);
+      }
+      res.end();
+    } catch (error) {
+      if (!res.headersSent) {
+        const message =
+          error instanceof Error ? error.message : "stream failed";
+        throw new InternalServerErrorException(message);
+      }
+      res.end();
+    }
+  }
+
+  @Post("chain-stream")
+  async chainStream(
+    @Body() body: { input?: string },
+    @Res() res: Response
+  ) {
+    const input = this.requireInput(body);
+    res.setHeader("Content-Type", "text/event-stream");
+    res.setHeader("Cache-Control", "no-cache");
+    res.setHeader("Connection", "keep-alive");
+
+    try {
+      const stream = await this.llmService.chainStream(input);
+      for await (const chunk of stream) {
+        res.write(typeof chunk === "string" ? chunk : String(chunk ?? ""));
+      }
+      res.end();
+    } catch (error) {
+      if (!res.headersSent) {
+        const message =
+          error instanceof Error ? error.message : "chain-stream failed";
+        throw new InternalServerErrorException(message);
+      }
+      res.end();
+    }
+  }
 }
