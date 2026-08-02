@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import type { RequirementResult } from "@autix/contracts";
 
@@ -40,6 +41,9 @@ export default function Home() {
   return (
     <main style={{ padding: 24, maxWidth: 720 }}>
       <h1>Requirement Extract Demo</h1>
+      <p>
+        <Link href="/langchain">LangChain Demos →</Link>
+      </p>
       <textarea
         value={input}
         onChange={(e) => setInput(e.target.value)}
