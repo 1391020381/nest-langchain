@@ -46,7 +46,7 @@
 | [x] | 第一章 | [2-第一章](./AI%20Agents%20开发实践/2-第一章：把模型变成能力.md) | — |
 | [x] | 第二章 | [3-第二章](./AI%20Agents%20开发实践/3-第二章：搭建智能体的工程底座.md) | [feat/foundation](https://github.com/Cookieboty/autix-demo/tree/feat/foundation) |
 | [ ] | 第 2.5 章 | [4-第2.5章](./AI%20Agents%20开发实践/4-第2.5章：用%20AI%20接管工程化开发：从工程底座到能力链路.md) | [feat/user-system](https://github.com/Cookieboty/autix-demo/tree/feat/user-system) |
-| [ ] | 第三章 | [5-第三章](./AI%20Agents%20开发实践/5-第三章：LangChain%20起手——搭建第一条服务端能力链路.md) | — |
+| [ ] | 第三章 | [5-第三章](./AI%20Agents%20开发实践/5-第三章：LangChain%20起手——搭建第一条服务端能力链路.md) · [API 流程速查](./AI%20Agents%20开发实践/5a-第三章附录：LangChain%20编程%20API%20使用流程速查.md) | — |
 | [ ] | 第四章 | [6-第四章](./AI%20Agents%20开发实践/6-第四章：LangChain%20进阶——记忆、工具与多%20Agent.md) | — |
 | [ ] | 第五章 | [7-第五章](./AI%20Agents%20开发实践/7-第五章：从%20Mock%20到生产——数据库设计与向量化落库.md) | — |
 | [ ] | 第六章 | [8-第六章](./AI%20Agents%20开发实践/8-第六章：让%20AI%20做更懂你的交互.md) | feat/ui（文中提及） |

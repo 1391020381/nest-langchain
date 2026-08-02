@@ -1,10 +1,11 @@
-# 第三章 LangChain 编程 API 使用流程梳理
+# 第三章附录：LangChain 编程 API 使用流程速查
 
-> 范围：LangChain 编程 API（不含 HTTP 路由清单）  
-> 结构：分层目录（A）+ 对象生命周期（C）  
-> 业务目标：需求文本 → `{ action, constraints, entities }`  
-> 对应文档：`docs/AI Agents 开发实践/5-第三章：LangChain 起手——搭建第一条服务端能力链路.md`  
-> 代码落点：`services/api/src/llm/*`
+> 配套课本：[5-第三章：LangChain 起手——搭建第一条服务端能力链路](./5-第三章：LangChain%20起手——搭建第一条服务端能力链路.md)  
+> 设计规格：[2026-08-02-ch3-langchain-api-usage-flow-design](../superpowers/specs/2026-08-02-ch3-langchain-api-usage-flow-design.md)  
+> 代码落点：`services/api/src/llm/*`  
+> 范围：**LangChain 编程 API**（不含 HTTP 路由清单）
+
+本文按「对象怎么建 → 调什么 API → 得到什么 → 如何串成业务」梳理第三章能力链。
 
 ---
 
@@ -14,7 +15,7 @@
 |------|------|
 | 需求文本，例如「用户注册时必须绑定手机号，密码至少8位」 | `{ action: string; constraints: string[]; entities: string[] }` |
 
-正式业务入口：`RequirementService.extract`（`POST /requirement/extract` 仅为落点，本文不展开 HTTP）。
+正式业务入口：`RequirementService.extract`（对外多为 `POST /requirement/extract`，本文不展开 HTTP）。
 
 ---
 
@@ -37,9 +38,7 @@
 | `model.stream(messages)` | 同上 | AsyncIterable chunk | 边生成边返回；难做结构化断言 |
 | `model.batch(messageGroups)` | `BaseMessage[][]` | `AIMessage[]` | 同逻辑批量跑多条 |
 
-### 业务位置
-
-所有后续能力的底座。主业务最终仍是「带消息的模型调用」；`stream` / `batch` 多为演示分支。
+**业务位置：** 所有后续能力的底座；主业务最终仍是「带消息的模型调用」。`stream` / `batch` 多为演示分支。
 
 ---
 
@@ -62,9 +61,7 @@
 
 演示衔接：`formatMessages({ input }) → model.invoke(messages) → 自由文本`。
 
-### 业务位置
-
-解决提示内容不失控。主业务 `extract` 同样依赖模板化消息；`prompt.invoke` 预览是调试分支。
+**业务位置：** 解决提示内容不失控。主业务 `extract` 同样依赖模板化消息；`prompt.invoke` 预览是调试分支。
 
 ---
 
@@ -88,9 +85,7 @@
 
 数据流：`{ input } → ChatPromptTemplate → ChatOpenAI → StringOutputParser → string`。
 
-### 业务位置
-
-解决重复步骤统一管理。正式 `extract` 不用这条字符串链，而用结构化输出；本层是中间/演示形态。
+**业务位置：** 解决重复步骤统一管理。正式 `extract` 不用这条字符串链，而用结构化输出；本层是中间/演示形态。
 
 ---
 
@@ -113,9 +108,7 @@
 | `model.withStructuredOutput(schema, options)` | schema；可选 `method` | 可 `.invoke` 的包装模型 | 输出约束进 schema |
 | `structuredModel.invoke(messages)` | `formatMessages` 的消息 | `{ action, constraints, entities }` | 本章业务终态调用 |
 
-### 业务位置
-
-相对字符串链，本层才让结果真正进入程序（API 返回、前端展示、测试断言）。
+**业务位置：** 相对字符串链，本层才让结果真正进入程序（API 返回、前端展示、测试断言）。
 
 ---
 
@@ -149,9 +142,7 @@
 闭环：`invoke` → 若有 `tool_calls` 则执行并 `ToolMessage` → 再 `invoke` → 最终答复。  
 `toolBindDemo` 只观察 `tool_calls`，不执行工具。
 
-### 业务位置
-
-增强分支，非当前 `extract` 必经。分工：模型决策，工具给确定性结果。后续 RAG / MCP / Agent 扩展同一边界。
+**业务位置：** 增强分支，非当前 `extract` 必经。分工：模型决策，工具给确定性结果。后续 RAG / MCP / Agent 扩展同一边界。
 
 ---
 
@@ -184,11 +175,9 @@ createChatModel()
 | 工具绑定 | `bindTools` → `invoke` | `tool_calls`（未执行） |
 | 工具闭环 | 上一步 + `tool.invoke` + `ToolMessage` → 再 `invoke` | 最终答复 |
 
-文档呈现原则：**主链加粗写清四步；演示分支保留完整「创建→调用→结果」表，标明非必经。**
-
 ---
 
-## 7. 对象关系总览（C）
+## 7. 对象关系总览
 
 ```text
                     createChatModel()
@@ -213,27 +202,6 @@ ChatPromptTemplate ──formatMessages──► messages ──► 上述任一
 
 ---
 
-## 8. 范围与非目标
+## 一句话记忆
 
-**在范围内**
-
-- 第三章涉及的 LangChain 编程 API：创建对象、参数、返回值、业务串联
-- 与仓库当前实现一致的说明（含 `functionCalling`）
-
-**不在范围内**
-
-- HTTP 路由 / Controller 契约清单
-- 实现新功能或改业务代码
-- RAG / MCP / Agent Runtime（仅点明与工具层边界的延续关系）
-
----
-
-## 9. 落地产物
-
-| 产物 | 路径 |
-|------|------|
-| 设计规格（本文） | `docs/superpowers/specs/2026-08-02-ch3-langchain-api-usage-flow-design.md` |
-| 读者向速查（已归档） | `docs/AI Agents 开发实践/5a-第三章附录：LangChain 编程 API 使用流程速查.md` |
-| 实施计划 | `docs/superpowers/plans/2026-08-02-ch3-langchain-api-usage-flow.md` |
-
-互链：课本第三章文首、`docs/learning-path.md` 第三章行。
+**模型负责接入与决策，提示负责可控输入，链负责固定流水线，结构化负责程序可消费，工具负责确定性动作；第三章正式业务用前四者串成 `extract`，工具是增强分支。**
