@@ -32,3 +32,6 @@ Thumbs.db
 tmp/
 temp/
 .cache/
+
+# brainstorm / visual companion sessions
+.superpowers/
