@@ -35,3 +35,7 @@ temp/
 
 # brainstorm / visual companion sessions
 .superpowers/
+
+# Ch4 runtime ticket artifacts
+services/api/workspace/tickets/*
+!services/api/workspace/tickets/.gitkeep
