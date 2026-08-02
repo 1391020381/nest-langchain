@@ -25,4 +25,21 @@ describe("LlmController", () => {
     const { rendered } = await controller.promptPreview({ input: SAMPLE });
     expect(rendered).toContain(SAMPLE);
   });
+
+  test("invoke wraps string result", async () => {
+    const service = {
+      invokeDemo: async () => "ok-result",
+    } as unknown as LlmService;
+    const controller = new LlmController(service);
+    await expect(controller.invoke({ input: SAMPLE })).resolves.toEqual({
+      result: "ok-result",
+    });
+  });
+
+  test("chain-batch rejects missing inputs", async () => {
+    const controller = new LlmController(new LlmService());
+    await expect(controller.chainBatch({})).rejects.toBeInstanceOf(
+      BadRequestException
+    );
+  });
 });

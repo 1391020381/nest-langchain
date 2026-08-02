@@ -60,4 +60,71 @@ export class LlmController {
       this.wrapError(error, "batch failed");
     }
   }
+
+  @Post("invoke")
+  async invoke(@Body() body: { input?: string }) {
+    const input = this.requireInput(body);
+    try {
+      const result = await this.llmService.invokeDemo(input);
+      return { result };
+    } catch (error) {
+      if (error instanceof BadRequestException) throw error;
+      this.wrapError(error, "invoke failed");
+    }
+  }
+
+  @Post("prompt-to-model")
+  async promptToModel(@Body() body: { input?: string }) {
+    const input = this.requireInput(body);
+    try {
+      return await this.llmService.promptToModel(input);
+    } catch (error) {
+      if (error instanceof BadRequestException) throw error;
+      this.wrapError(error, "prompt-to-model failed");
+    }
+  }
+
+  @Post("chain-invoke")
+  async chainInvoke(@Body() body: { input?: string }) {
+    const input = this.requireInput(body);
+    try {
+      return await this.llmService.chainInvoke(input);
+    } catch (error) {
+      if (error instanceof BadRequestException) throw error;
+      this.wrapError(error, "chain-invoke failed");
+    }
+  }
+
+  @Post("chain-batch")
+  async chainBatch(@Body() body: { inputs?: string[] }) {
+    const inputs = this.requireInputs(body);
+    try {
+      return await this.llmService.chainBatch(inputs);
+    } catch (error) {
+      if (error instanceof BadRequestException) throw error;
+      this.wrapError(error, "chain-batch failed");
+    }
+  }
+
+  @Post("tool-bind")
+  async toolBind(@Body() body: { input?: string }) {
+    const input = this.requireInput(body);
+    try {
+      return await this.llmService.toolBindDemo(input);
+    } catch (error) {
+      if (error instanceof BadRequestException) throw error;
+      this.wrapError(error, "tool-bind failed");
+    }
+  }
+
+  @Post("tool-loop")
+  async toolLoop(@Body() body: { input?: string }) {
+    const input = this.requireInput(body);
+    try {
+      return await this.llmService.toolLoopDemo(input);
+    } catch (error) {
+      if (error instanceof BadRequestException) throw error;
+      this.wrapError(error, "tool-loop failed");
+    }
+  }
 }
