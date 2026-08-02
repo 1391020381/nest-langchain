@@ -8,6 +8,8 @@ import { VectorStoreService } from "./embedding/vector-store.service";
 import { EmbeddingController } from "./embedding/embedding.controller";
 import { OrchestratorService } from "./agents/orchestrator.service";
 import { AgentsController } from "./agents/agents.controller";
+import { AdvancedAnalysisService } from "./advanced-analysis.service";
+import { AdvancedController } from "./advanced.controller";
 
 @Module({
   controllers: [
@@ -15,6 +17,7 @@ import { AgentsController } from "./agents/agents.controller";
     FilesController,
     EmbeddingController,
     AgentsController,
+    AdvancedController,
   ],
   providers: [
     RunnableMemoryService,
@@ -22,6 +25,7 @@ import { AgentsController } from "./agents/agents.controller";
     EmbeddingService,
     VectorStoreService,
     OrchestratorService,
+    AdvancedAnalysisService,
   ],
   exports: [
     RunnableMemoryService,
@@ -29,6 +33,7 @@ import { AgentsController } from "./agents/agents.controller";
     EmbeddingService,
     VectorStoreService,
     OrchestratorService,
+    AdvancedAnalysisService,
   ],
 })
 export class AdvancedModule {}
