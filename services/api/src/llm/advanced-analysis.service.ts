@@ -26,7 +26,7 @@ export class AdvancedAnalysisService {
       (result.clarificationQuestions?.length ?? 0) > 0 ||
       result.status === "need_clarification";
 
-    if (!needsClarification && result.report) {
+    if (!needsClarification && result.fallback == null && result.report) {
       const orderId = result.extract?.orderId ?? "EC20240315001";
       await this.files.writeWorkspaceFile(
         `tickets/${orderId}-analysis.md`,

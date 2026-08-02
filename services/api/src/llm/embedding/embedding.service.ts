@@ -6,11 +6,19 @@ export class EmbeddingService implements OnModuleInit {
   private embedder: any;
   private ready = false;
 
-  async onModuleInit() {
+  onModuleInit() {
     // huggingface.co is often unreachable in CN; override via HF_ENDPOINT.
     const endpoint = process.env.HF_ENDPOINT ?? "https://hf-mirror.com";
     env.remoteHost = endpoint.endsWith("/") ? endpoint : `${endpoint}/`;
 
+    // Non-blocking warm-up: do not delay Nest listen on slow/failed download.
+    void this.warmUp().catch((err) => {
+      console.error("[EmbeddingService] warm-up failed:", err);
+      this.ready = false;
+    });
+  }
+
+  private async warmUp() {
     this.embedder = await pipeline(
       "feature-extraction",
       "Xenova/paraphrase-multilingual-MiniLM-L12-v2"
