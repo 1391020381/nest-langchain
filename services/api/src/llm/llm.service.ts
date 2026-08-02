@@ -5,6 +5,7 @@ import {
   ToolMessage,
   type BaseMessage,
 } from "@langchain/core/messages";
+import type { StructuredToolInterface } from "@langchain/core/tools";
 import { createChatModel } from "./model.factory";
 import { requirementPrompt } from "./requirement.prompt-builder";
 import { requirementChain } from "./requirement.chain";
@@ -91,8 +92,13 @@ export class LlmService {
   }
 
   async toolLoopDemo(input: string) {
-    const tools = [checkConstraintValidityTool, lookupEntityDefinitionTool];
-    const toolMap = Object.fromEntries(tools.map((t) => [t.name, t]));
+    const tools: StructuredToolInterface[] = [
+      checkConstraintValidityTool,
+      lookupEntityDefinitionTool,
+    ];
+    const toolMap: Record<string, StructuredToolInterface> = Object.fromEntries(
+      tools.map((t) => [t.name, t])
+    );
     const modelWithTools = this.model.bindTools(tools);
 
     const messages: BaseMessage[] = [

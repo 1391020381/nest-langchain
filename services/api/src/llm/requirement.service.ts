@@ -29,8 +29,11 @@ export class RequirementService {
     }
 
     const messages = await this.prompt.formatMessages({ input });
+    // SiliconFlow OpenAI-compatible: functionCalling is reliable;
+    // jsonMode often hangs on some models.
     const structuredModel = this.model.withStructuredOutput(
-      RequirementResultSchema
+      RequirementResultSchema,
+      { method: "functionCalling" }
     );
 
     try {

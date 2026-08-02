@@ -1,6 +1,6 @@
 llm:
   provider: openai
-  model: gpt-4o-mini
+  model: deepseek-ai/DeepSeek-V4-Pro
   temperature: 0
   maxTokens: 800
 
