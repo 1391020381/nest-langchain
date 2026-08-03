@@ -107,6 +107,29 @@ export class DocumentService {
     return document;
   }
 
+  async claimForProcessing(userId: string, documentId: string): Promise<void> {
+    const result = await this.prisma.document.updateMany({
+      where: {
+        id: documentId,
+        userId,
+        status: { in: ["pending", "failed"] },
+      },
+      data: { status: "processing" },
+    });
+
+    if (result.count > 0) {
+      return;
+    }
+
+    const document = await this.prisma.document.findFirst({
+      where: { id: documentId, userId },
+    });
+    if (!document) {
+      throw new NotFoundException("Document not found");
+    }
+    throw new ConflictException("Document is already processing or completed");
+  }
+
   async parseAndChunk(userId: string, documentId: string) {
     const document = await this.getOwnedOrThrow(userId, documentId);
     assertProcessable(document.status);
@@ -146,13 +169,11 @@ export class DocumentService {
     });
   }
 
-  async processDocument(userId: string, documentId: string): Promise<void> {
+  async processDocumentAfterClaim(
+    userId: string,
+    documentId: string,
+  ): Promise<void> {
     const document = await this.getOwnedOrThrow(userId, documentId);
-    assertProcessable(document.status);
-    await this.prisma.document.update({
-      where: { id: documentId },
-      data: { status: "processing" },
-    });
 
     try {
       const chunks = await this.readAndSplitDocument(document);

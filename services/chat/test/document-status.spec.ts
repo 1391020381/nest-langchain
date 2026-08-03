@@ -35,6 +35,52 @@ describe("process guard", () => {
   );
 });
 
+describe("DocumentService.claimForProcessing", () => {
+  test("only the first of two sequential claims succeeds", async () => {
+    let status = "pending";
+    const prisma = {
+      document: {
+        updateMany: mock(
+          async ({
+            where,
+            data,
+          }: {
+            where: {
+              id: string;
+              userId: string;
+              status: { in: string[] };
+            };
+            data: { status: string };
+          }) => {
+            if (
+              where.id === "document-1" &&
+              where.userId === "user-1" &&
+              where.status.in.includes(status)
+            ) {
+              status = data.status;
+              return { count: 1 };
+            }
+            return { count: 0 };
+          },
+        ),
+        findFirst: mock(async ({ where }: { where: { id: string; userId: string } }) =>
+          where.id === "document-1" && where.userId === "user-1"
+            ? { id: "document-1", status }
+            : null,
+        ),
+      },
+    };
+    const service = new DocumentService(prisma as never, {} as never);
+
+    await service.claimForProcessing("user-1", "document-1");
+
+    expect(status).toBe("processing");
+    await expect(
+      service.claimForProcessing("user-1", "document-1"),
+    ).rejects.toMatchObject({ status: 409 });
+  });
+});
+
 describe("DocumentService.parseAndChunk", () => {
   test("replaces chunks and updates chunkCount without changing status", async () => {
     const uploadsDirectory = join(process.cwd(), "uploads");
@@ -89,7 +135,7 @@ describe("DocumentService.parseAndChunk", () => {
   });
 });
 
-describe("DocumentService.processDocument", () => {
+describe("DocumentService.processDocumentAfterClaim", () => {
   test("writes embeddings and marks the document completed", async () => {
     const uploadsDirectory = join(process.cwd(), "uploads");
     await mkdir(uploadsDirectory, { recursive: true });
@@ -126,7 +172,7 @@ describe("DocumentService.processDocument", () => {
       embeddings as never,
     );
 
-    await service.processDocument("user-1", "document-1");
+    await service.processDocumentAfterClaim("user-1", "document-1");
 
     expect(embeddings.waitUntilReady).toHaveBeenCalledTimes(1);
     expect(embeddings.embedDocuments).toHaveBeenCalledWith([
@@ -138,7 +184,6 @@ describe("DocumentService.processDocument", () => {
       "chunk-1",
     );
     expect(update.mock.calls.map(([input]) => input.data)).toEqual([
-      { status: "processing" },
       { status: "completed", chunkCount: 1 },
     ]);
   });
@@ -166,26 +211,24 @@ describe("DocumentService.processDocument", () => {
     );
 
     await expect(
-      service.processDocument("user-1", "document-1"),
+      service.processDocumentAfterClaim("user-1", "document-1"),
     ).rejects.toThrow();
     expect(deleteMany).toHaveBeenCalledWith({
       where: { documentId: "document-1" },
     });
     expect(update.mock.calls.map(([input]) => input.data)).toEqual([
-      { status: "processing" },
       { status: "failed", chunkCount: 0 },
     ]);
   });
 });
 
 describe("DocumentController.process", () => {
-  test("validates ownership before accepting background processing", async () => {
-    const document = { id: "document-1", status: "pending" };
-    const getOwnedOrThrow = mock(async () => document);
-    const processDocument = mock(async () => undefined);
+  test("claims before accepting background processing", async () => {
+    const claimForProcessing = mock(async () => undefined);
+    const processDocumentAfterClaim = mock(async () => undefined);
     const controller = new DocumentController({
-      getOwnedOrThrow,
-      processDocument,
+      claimForProcessing,
+      processDocumentAfterClaim,
     } as never);
 
     const response = await controller.process(
@@ -194,7 +237,10 @@ describe("DocumentController.process", () => {
     );
 
     expect(response).toEqual({ accepted: true, documentId: "document-1" });
-    expect(getOwnedOrThrow).toHaveBeenCalledWith("user-1", "document-1");
-    expect(processDocument).toHaveBeenCalledWith("user-1", "document-1");
+    expect(claimForProcessing).toHaveBeenCalledWith("user-1", "document-1");
+    expect(processDocumentAfterClaim).toHaveBeenCalledWith(
+      "user-1",
+      "document-1",
+    );
   });
 });

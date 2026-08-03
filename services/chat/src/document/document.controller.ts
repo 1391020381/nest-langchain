@@ -21,7 +21,7 @@ import {
   type CurrentUserData,
 } from "../auth/current-user.decorator";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
-import { assertProcessable, DocumentService } from "./document.service";
+import { DocumentService } from "./document.service";
 
 const MAX_UPLOAD_SIZE = 10 * 1024 * 1024;
 
@@ -76,10 +76,9 @@ export class DocumentController {
     @CurrentUser() user: CurrentUserData,
     @Param("id") id: string,
   ) {
-    const document = await this.documentService.getOwnedOrThrow(user.userId, id);
-    assertProcessable(document.status);
+    await this.documentService.claimForProcessing(user.userId, id);
     void this.documentService
-      .processDocument(user.userId, id)
+      .processDocumentAfterClaim(user.userId, id)
       .catch(() => undefined);
     return { accepted: true, documentId: id };
   }
