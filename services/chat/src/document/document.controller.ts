@@ -7,6 +7,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Logger,
   Param,
   Post,
   UploadedFile,
@@ -41,6 +42,8 @@ class UploadMulterExceptionFilter implements ExceptionFilter {
 @Controller("api/documents")
 @UseGuards(JwtAuthGuard)
 export class DocumentController {
+  private readonly logger = new Logger(DocumentController.name);
+
   constructor(private readonly documentService: DocumentService) {}
 
   @Post("upload")
@@ -79,7 +82,12 @@ export class DocumentController {
     await this.documentService.claimForProcessing(user.userId, id);
     void this.documentService
       .processDocumentAfterClaim(user.userId, id)
-      .catch(() => undefined);
+      .catch((error: unknown) => {
+        this.logger.error(
+          `Background processing failed for document ${id}`,
+          error instanceof Error ? error.stack : String(error),
+        );
+      });
     return { accepted: true, documentId: id };
   }
 }

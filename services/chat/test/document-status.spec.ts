@@ -1,5 +1,5 @@
-import { afterEach, describe, expect, mock, test } from "bun:test";
-import { ConflictException } from "@nestjs/common";
+import { afterEach, describe, expect, mock, spyOn, test } from "bun:test";
+import { ConflictException, Logger } from "@nestjs/common";
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { join, relative } from "node:path";
 import { DocumentController } from "../src/document/document.controller";
@@ -160,6 +160,7 @@ describe("DocumentService.processDocumentAfterClaim", () => {
       waitUntilReady: mock(async () => undefined),
       embedDocuments: mock(async () => [[0.1, -0.2, 0.3]]),
     };
+    const publish = mock(() => undefined);
     const service = new DocumentService(
       {
         document: { findFirst: mock(async () => document), update },
@@ -170,6 +171,7 @@ describe("DocumentService.processDocumentAfterClaim", () => {
         $executeRawUnsafe: executeRaw,
       } as never,
       embeddings as never,
+      { publish } as never,
     );
 
     await service.processDocumentAfterClaim("user-1", "document-1");
@@ -185,6 +187,13 @@ describe("DocumentService.processDocumentAfterClaim", () => {
     );
     expect(update.mock.calls.map(([input]) => input.data)).toEqual([
       { status: "completed", chunkCount: 1 },
+    ]);
+    expect(publish.mock.calls).toEqual([
+      [
+        "user-1",
+        { type: "processing", documentId: "document-1" },
+      ],
+      ["user-1", { type: "done", documentId: "document-1" }],
     ]);
   });
 
@@ -202,12 +211,14 @@ describe("DocumentService.processDocumentAfterClaim", () => {
       ...data,
     }));
     const deleteMany = mock(async () => ({ count: 1 }));
+    const publish = mock(() => undefined);
     const service = new DocumentService(
       {
         document: { findFirst: mock(async () => document), update },
         documentChunk: { deleteMany },
       } as never,
       { waitUntilReady: mock(async () => undefined) } as never,
+      { publish } as never,
     );
 
     await expect(
@@ -219,6 +230,16 @@ describe("DocumentService.processDocumentAfterClaim", () => {
     expect(update.mock.calls.map(([input]) => input.data)).toEqual([
       { status: "failed", chunkCount: 0 },
     ]);
+    expect(publish.mock.calls[0]).toEqual([
+      "user-1",
+      { type: "processing", documentId: "document-1" },
+    ]);
+    expect(publish.mock.calls[1]?.[0]).toBe("user-1");
+    expect(publish.mock.calls[1]?.[1]).toMatchObject({
+      type: "error",
+      documentId: "document-1",
+    });
+    expect(publish.mock.calls[1]?.[1].message).toBeString();
   });
 });
 
@@ -242,5 +263,28 @@ describe("DocumentController.process", () => {
       "user-1",
       "document-1",
     );
+  });
+
+  test("logs a rejected background process", async () => {
+    const failure = new Error("embedding failed");
+    const logError = spyOn(Logger.prototype, "error").mockImplementation(
+      () => undefined,
+    );
+    const controller = new DocumentController({
+      claimForProcessing: mock(async () => undefined),
+      processDocumentAfterClaim: mock(async () => {
+        throw failure;
+      }),
+    } as never);
+
+    await controller.process(
+      { userId: "user-1", email: "user@example.com", role: "user" },
+      "document-1",
+    );
+    await Promise.resolve();
+
+    expect(logError).toHaveBeenCalled();
+    expect(logError.mock.calls[0]?.[0]).toContain("document-1");
+    logError.mockRestore();
   });
 });

@@ -17,6 +17,7 @@ import {
 } from "node:path";
 import { ChatEmbeddingService } from "../embedding/chat-embedding.service";
 import { PrismaService } from "../prisma/prisma.service";
+import { SseService } from "../sse/sse.service";
 
 const ALLOWED_EXTENSIONS = new Set([".pdf", ".txt", ".md"]);
 const ALLOWED_MIME_TYPES = new Set([
@@ -36,6 +37,7 @@ export class DocumentService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly embeddings: ChatEmbeddingService,
+    private readonly sse: SseService,
   ) {}
 
   async upload(userId: string, file?: Express.Multer.File) {
@@ -173,9 +175,10 @@ export class DocumentService {
     userId: string,
     documentId: string,
   ): Promise<void> {
-    const document = await this.getOwnedOrThrow(userId, documentId);
+    this.sse.publish(userId, { type: "processing", documentId });
 
     try {
+      const document = await this.getOwnedOrThrow(userId, documentId);
       const chunks = await this.readAndSplitDocument(document);
       await this.prisma.documentChunk.deleteMany({ where: { documentId } });
 
@@ -207,12 +210,21 @@ export class DocumentService {
         where: { id: documentId },
         data: { status: "completed", chunkCount: chunks.length },
       });
+      this.sse.publish(userId, { type: "done", documentId });
     } catch (error) {
-      await this.prisma.documentChunk.deleteMany({ where: { documentId } });
-      await this.prisma.document.update({
-        where: { id: documentId },
-        data: { status: "failed", chunkCount: 0 },
-      });
+      try {
+        await this.prisma.documentChunk.deleteMany({ where: { documentId } });
+        await this.prisma.document.update({
+          where: { id: documentId },
+          data: { status: "failed", chunkCount: 0 },
+        });
+      } finally {
+        this.sse.publish(userId, {
+          type: "error",
+          documentId,
+          message: error instanceof Error ? error.message : String(error),
+        });
+      }
       throw error;
     }
   }

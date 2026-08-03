@@ -6,6 +6,7 @@ import { ConversationModule } from "./conversation/conversation.module";
 import { DocumentModule } from "./document/document.module";
 import { PrismaModule } from "./prisma/prisma.module";
 import { SearchModule } from "./search/search.module";
+import { SseModule } from "./sse/sse.module";
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { SearchModule } from "./search/search.module";
     ConversationModule,
     DocumentModule,
     SearchModule,
+    SseModule,
   ],
   controllers: [AppController],
   providers: [AppService],
