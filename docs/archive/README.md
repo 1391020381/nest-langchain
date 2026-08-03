@@ -4,6 +4,7 @@
 
 - `01-langchain-foundations-summary.md`
 - `02-langchain-concepts-and-api-guide.md`
+- `03-langchain-ch3-ch4-api-and-flow.md`（第三、四章 API 与应用流程速查）
 - `api-examples.http`
 - `exercises/`
 
