@@ -4,8 +4,17 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { mkdir, unlink, writeFile } from "node:fs/promises";
-import { basename, extname, join, posix } from "node:path";
+import { parseFileContent, splitText } from "@autix/llm-core";
+import { mkdir, readFile, unlink, writeFile } from "node:fs/promises";
+import {
+  basename,
+  extname,
+  isAbsolute,
+  join,
+  posix,
+  relative,
+  resolve,
+} from "node:path";
 import { PrismaService } from "../prisma/prisma.service";
 
 const ALLOWED_EXTENSIONS = new Set([".pdf", ".txt", ".md"]);
@@ -92,5 +101,44 @@ export class DocumentService {
     }
 
     return document;
+  }
+
+  async parseAndChunk(userId: string, documentId: string) {
+    const document = await this.getOwnedOrThrow(userId, documentId);
+    assertProcessable(document.status);
+
+    const uploadsDirectory = resolve(process.cwd(), "uploads");
+    const absoluteFilename = resolve(process.cwd(), document.filename);
+    const pathWithinUploads = relative(uploadsDirectory, absoluteFilename);
+    if (pathWithinUploads.startsWith("..") || isAbsolute(pathWithinUploads)) {
+      throw new BadRequestException("Document file path is invalid");
+    }
+
+    const buffer = await readFile(absoluteFilename);
+    const text = await parseFileContent(
+      buffer,
+      document.mimeType,
+      document.originalName,
+    );
+    const chunks = await splitText(text);
+
+    return this.prisma.$transaction(async (transaction) => {
+      await transaction.documentChunk.deleteMany({
+        where: { documentId },
+      });
+      if (chunks.length > 0) {
+        await transaction.documentChunk.createMany({
+          data: chunks.map((content, chunkIndex) => ({
+            documentId,
+            content,
+            chunkIndex,
+          })),
+        });
+      }
+      return transaction.document.update({
+        where: { id: documentId },
+        data: { chunkCount: chunks.length },
+      });
+    });
   }
 }
