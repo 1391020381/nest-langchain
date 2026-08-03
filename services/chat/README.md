@@ -55,6 +55,21 @@ docker compose -f infra/compose/compose.yaml down
 
 Add `-v` only when you intentionally want to delete the database volume.
 
+## Docker Compose (`chat` service)
+
+The Compose `chat` container does **not** run Prisma migrations on startup. Apply
+migrations to the database **before** starting the full stack:
+
+```powershell
+docker compose -f infra/compose/compose.yaml up -d postgres
+bun run --cwd services/chat prisma:generate
+bun run --cwd services/chat prisma:migrate
+docker compose -f infra/compose/compose.yaml up -d chat
+```
+
+If you skip migration, the chat container may start but API calls that touch the
+database will fail until the schema exists.
+
 ## Acceptance smoke test
 
 With PostgreSQL migrated and the chat service running:

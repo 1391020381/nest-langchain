@@ -1,3 +1,5 @@
+# The chat service expects PostgreSQL schema already migrated locally
+# (see services/chat/README.md — run prisma migrate before `up chat`).
 services:
   chat:
     build:
