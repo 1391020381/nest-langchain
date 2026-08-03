@@ -4,6 +4,7 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import * as bcrypt from "bcrypt";
 import { PrismaService } from "../prisma/prisma.service";
 
@@ -39,10 +40,20 @@ export class AuthService {
 
     const passwordHash = await bcrypt.hash(password, BCRYPT_COST);
 
-    return this.prisma.user.create({
-      data: { email, password: passwordHash, name },
-      select: { id: true, email: true },
-    });
+    try {
+      return await this.prisma.user.create({
+        data: { email, password: passwordHash, name },
+        select: { id: true, email: true },
+      });
+    } catch (error) {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === "P2002"
+      ) {
+        throw new ConflictException("Email already registered");
+      }
+      throw error;
+    }
   }
 
   async login({ email, password }: LoginInput) {
