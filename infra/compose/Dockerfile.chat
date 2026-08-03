@@ -3,15 +3,23 @@ WORKDIR /app
 
 COPY package.json bun.lock bunfig.toml turbo.json tsconfig.base.json ./
 COPY packages/contracts/package.json ./packages/contracts/
+COPY packages/llm-core/package.json ./packages/llm-core/
+COPY services/api/package.json ./services/api/
 COPY services/chat/package.json ./services/chat/
 COPY clients/chat-web/package.json ./clients/chat-web/
+COPY clients/web/package.json ./clients/web/
 
 RUN bun install --frozen-lockfile
 
 COPY packages/contracts ./packages/contracts
+COPY packages/llm-core ./packages/llm-core
 COPY services/chat ./services/chat
 
-RUN bun run --filter=@autix/contracts build && bun run --filter=@autix/chat build
+RUN bunx prisma@6.19.3 generate \
+    --schema=services/chat/prisma/schema.prisma
+RUN bun run --filter=@autix/contracts build \
+    && bun run --filter=@autix/llm-core build \
+    && bun run --filter=@autix/chat build
 
 FROM oven/bun:1-alpine AS runner
 WORKDIR /app

@@ -5,6 +5,12 @@ services:
       dockerfile: infra/compose/Dockerfile.chat
     ports:
       - "4001:4001"
+    environment:
+      DATABASE_URL: postgresql://nest:nest@postgres:5432/nest_langchain?schema=public
+      JWT_SECRET: replace-me
+    depends_on:
+      postgres:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:4001/health"]
       interval: 10s
