@@ -656,10 +656,32 @@ Runnable 是统一执行协议；Chain 通常指由多个 Runnable 组合出的�
 
 ## 10. 官方参考资料
 
+LangChain.js 官方文档拆成两个站点，职责不同。教程站里看不到完整 API 索引，并不代表没有 Reference——只是换了域名。
+
+| 站点 | 内容 | 什么时候用 |
+| --- | --- | --- |
+| [docs.langchain.com](https://docs.langchain.com/oss/javascript/langchain/overview) | 概念、教程、How-to | 「怎么写」「为什么这样设计」 |
+| [reference.langchain.com](https://reference.langchain.com/) | API Reference（签名、参数、类型） | 「这个函数有哪些参数」「返回值类型是什么」 |
+
+实用口诀：
+
+- 查「怎么用」→ `docs.langchain.com`
+- 查「接口长什么样」→ `reference.langchain.com`，或 IDE 里跳进 `.d.ts`
+- 包很多（`langchain`、`@langchain/core`、`@langchain/openai`、`langgraph`、`deepagents`），Reference 按包浏览，不要只在教程站里硬找
+
+### 教程站常用入口
+
 - [LangChain JavaScript Overview](https://docs.langchain.com/oss/javascript/langchain/overview)
 - [Models](https://docs.langchain.com/oss/javascript/langchain/models)
 - [Messages](https://docs.langchain.com/oss/javascript/langchain/messages)
 - [Tools](https://docs.langchain.com/oss/javascript/langchain/tools)
+- [Agents / createAgent](https://docs.langchain.com/oss/javascript/langchain/agents)
 - [Structured Output](https://docs.langchain.com/oss/javascript/langchain/structured-output)
 - [Streaming](https://docs.langchain.com/oss/javascript/langchain/streaming)
-- [JavaScript API Reference](https://reference.langchain.com/javascript/)
+
+### API Reference 常用入口
+
+- [JavaScript Reference 总览](https://reference.langchain.com/javascript/)
+- [`langchain` 包](https://reference.langchain.com/javascript/langchain)（含 `createAgent`、`initChatModel`）
+- [`createAgent`](https://reference.langchain.com/javascript/langchain/index/createAgent)
+- [`@langchain/core`](https://reference.langchain.com/javascript/langchain-core)

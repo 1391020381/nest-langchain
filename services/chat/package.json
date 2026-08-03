@@ -21,8 +21,8 @@
     "@nestjs/jwt": "^11.0.2",
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.0.0",
-    "@prisma/adapter-pg": "^6",
-    "@prisma/client": "^6",
+    "@prisma/adapter-pg": "^7",
+    "@prisma/client": "^7",
     "bcrypt": "^6.0.0",
     "multer": "^2.2.0",
     "passport": "^0.7.0",
@@ -41,7 +41,8 @@
     "@types/passport-jwt": "^4.0.1",
     "@types/pdf-parse": "^1.1.5",
     "@types/pg": "^8.20.3",
-    "prisma": "^6",
+    "dotenv": "^17.4.2",
+    "prisma": "^7",
     "typescript": "^5.7.0"
   }
 }
