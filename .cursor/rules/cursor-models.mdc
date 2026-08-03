@@ -1,0 +1,17 @@
+---
+description: 本项目仅允许使用 Cursor Models（Grok 4.5 / Composer 2.5）
+alwaysApply: true
+---
+
+# 模型限制
+
+本项目只允许使用以下 Cursor Models：
+
+- Grok 4.5（`cursor-grok-4.5-high-fast`）
+- Composer 2.5（`composer-2.5-fast`）
+
+## 规则
+
+- 启动子代理 / Task 时，必须显式指定上述模型之一
+- 不要使用 Claude、GPT、Opus、Sonnet 等其他模型
+- 用户明确要求使用未在允许列表中的模型时，告知其不在本项目允许范围内，并改用上述模型之一
