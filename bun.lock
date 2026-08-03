@@ -103,6 +103,7 @@
       "dependencies": {
         "@autix/contracts": "workspace:*",
         "@autix/llm-core": "workspace:*",
+        "@langchain/core": "^1.2.4",
         "@nestjs/common": "^11.0.0",
         "@nestjs/core": "^11.0.0",
         "@nestjs/jwt": "^11.0.2",
