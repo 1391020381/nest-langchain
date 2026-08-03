@@ -7,6 +7,7 @@ import { JwtService } from "@nestjs/jwt";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import * as bcrypt from "bcrypt";
 import { PrismaService } from "../prisma/prisma.service";
+import { validateAuthCredentials } from "./auth.validation";
 
 const BCRYPT_COST = 10;
 
@@ -29,6 +30,8 @@ export class AuthService {
   ) {}
 
   async register({ email, password, name }: RegisterInput) {
+    validateAuthCredentials(email, password);
+
     const existingUser = await this.prisma.user.findUnique({
       where: { email },
       select: { id: true },
@@ -57,6 +60,8 @@ export class AuthService {
   }
 
   async login({ email, password }: LoginInput) {
+    validateAuthCredentials(email, password);
+
     const user = await this.prisma.user.findUnique({
       where: { email },
       select: { id: true, password: true },

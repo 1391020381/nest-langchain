@@ -7,13 +7,20 @@ export class ChatEmbeddingService implements OnModuleInit {
 
   constructor(private readonly local: LocalEmbeddings) {}
 
-  onModuleInit(): Promise<void> {
-    return this.waitUntilReady();
+  onModuleInit(): void {
+    // Non-blocking warm-up: do not delay Nest listen on slow/failed download.
+    void this.waitUntilReady().catch((err) => {
+      console.error("[ChatEmbeddingService] warm-up failed:", err);
+    });
   }
 
   waitUntilReady(): Promise<void> {
     this.initialization ??= this.local.init();
     return this.initialization;
+  }
+
+  assertReady(): void {
+    this.local.assertReady();
   }
 
   async embedQuery(text: string): Promise<number[]> {

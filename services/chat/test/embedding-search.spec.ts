@@ -4,7 +4,7 @@ import { SearchController } from "../src/search/search.controller";
 import { SearchService } from "../src/search/search.service";
 
 describe("ChatEmbeddingService", () => {
-  test("initializes once and waits before embedding documents", async () => {
+  test("warms up in the background and waits before embedding documents", async () => {
     let releaseInitialization!: () => void;
     const initialization = new Promise<void>((resolve) => {
       releaseInitialization = resolve;
@@ -15,17 +15,18 @@ describe("ChatEmbeddingService", () => {
         documents.map(() => [0.1, 0.2]),
       ),
       embedQuery: mock(async () => [0.1, 0.2]),
+      assertReady: mock(() => undefined),
     };
     const service = new ChatEmbeddingService(local as never);
 
-    const moduleInitialization = service.onModuleInit();
+    service.onModuleInit();
+    expect(local.init).toHaveBeenCalledTimes(1);
+
     const embedding = service.embedDocuments(["chunk"]);
     expect(local.embedDocuments).not.toHaveBeenCalled();
 
     releaseInitialization();
-    await moduleInitialization;
     expect(await embedding).toEqual([[0.1, 0.2]]);
-    expect(local.init).toHaveBeenCalledTimes(1);
   });
 });
 

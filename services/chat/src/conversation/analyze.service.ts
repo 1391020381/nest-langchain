@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { orchestrate } from "@autix/llm-core";
 import { PrismaService } from "../prisma/prisma.service";
 import { SearchService } from "../search/search.service";
@@ -30,6 +30,10 @@ export class AnalyzeService {
   ) {}
 
   async analyze(userId: string, conversationId: string, input: string) {
+    if (typeof input !== "string" || !input.trim()) {
+      throw new BadRequestException("Input is required");
+    }
+
     await this.conversations.getOwnedOrThrow(userId, conversationId);
 
     const history = new DatabaseChatMessageHistory(
