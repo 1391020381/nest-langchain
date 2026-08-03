@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@autix/contracts": "workspace:*",
+    "@autix/llm-core": "workspace:*",
     "@langchain/classic": "^1.0.40",
     "@langchain/core": "^1.2.4",
     "@langchain/openai": "^1.5.5",
