@@ -15,6 +15,7 @@ import {
   relative,
   resolve,
 } from "node:path";
+import { ChatEmbeddingService } from "../embedding/chat-embedding.service";
 import { PrismaService } from "../prisma/prisma.service";
 
 const ALLOWED_EXTENSIONS = new Set([".pdf", ".txt", ".md"]);
@@ -32,7 +33,10 @@ export function assertProcessable(status: string): void {
 
 @Injectable()
 export class DocumentService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly embeddings: ChatEmbeddingService,
+  ) {}
 
   async upload(userId: string, file?: Express.Multer.File) {
     if (!file) {
@@ -140,5 +144,85 @@ export class DocumentService {
         data: { chunkCount: chunks.length },
       });
     });
+  }
+
+  async processDocument(userId: string, documentId: string): Promise<void> {
+    const document = await this.getOwnedOrThrow(userId, documentId);
+    assertProcessable(document.status);
+    await this.prisma.document.update({
+      where: { id: documentId },
+      data: { status: "processing" },
+    });
+
+    try {
+      const chunks = await this.readAndSplitDocument(document);
+      await this.prisma.documentChunk.deleteMany({ where: { documentId } });
+
+      const chunkRows = [];
+      for (const [chunkIndex, content] of chunks.entries()) {
+        chunkRows.push(
+          await this.prisma.documentChunk.create({
+            data: { documentId, content, chunkIndex },
+          }),
+        );
+      }
+
+      await this.embeddings.waitUntilReady();
+      const vectors = await this.embeddings.embedDocuments(chunks);
+      if (vectors.length !== chunkRows.length) {
+        throw new Error("Embedding count does not match document chunk count");
+      }
+
+      for (const [index, embedding] of vectors.entries()) {
+        const vector = this.toVectorString(embedding);
+        await this.prisma.$executeRawUnsafe(
+          'UPDATE "DocumentChunk" SET embedding = $1::vector WHERE id = $2',
+          vector,
+          chunkRows[index].id,
+        );
+      }
+
+      await this.prisma.document.update({
+        where: { id: documentId },
+        data: { status: "completed", chunkCount: chunks.length },
+      });
+    } catch (error) {
+      await this.prisma.documentChunk.deleteMany({ where: { documentId } });
+      await this.prisma.document.update({
+        where: { id: documentId },
+        data: { status: "failed", chunkCount: 0 },
+      });
+      throw error;
+    }
+  }
+
+  private async readAndSplitDocument(document: {
+    filename: string;
+    mimeType: string;
+    originalName: string;
+  }): Promise<string[]> {
+    const uploadsDirectory = resolve(process.cwd(), "uploads");
+    const absoluteFilename = resolve(process.cwd(), document.filename);
+    const pathWithinUploads = relative(uploadsDirectory, absoluteFilename);
+    if (pathWithinUploads.startsWith("..") || isAbsolute(pathWithinUploads)) {
+      throw new BadRequestException("Document file path is invalid");
+    }
+    const buffer = await readFile(absoluteFilename);
+    const text = await parseFileContent(
+      buffer,
+      document.mimeType,
+      document.originalName,
+    );
+    return splitText(text);
+  }
+
+  private toVectorString(embedding: number[]): string {
+    if (
+      embedding.length === 0 ||
+      embedding.some((value) => !Number.isFinite(value))
+    ) {
+      throw new Error("Embedding vector must contain finite numbers");
+    }
+    return `[${embedding.join(",")}]`;
   }
 }

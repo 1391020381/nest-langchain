@@ -5,6 +5,8 @@ import {
   Controller,
   ExceptionFilter,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Post,
   UploadedFile,
@@ -19,7 +21,7 @@ import {
   type CurrentUserData,
 } from "../auth/current-user.decorator";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
-import { DocumentService } from "./document.service";
+import { assertProcessable, DocumentService } from "./document.service";
 
 const MAX_UPLOAD_SIZE = 10 * 1024 * 1024;
 
@@ -66,5 +68,19 @@ export class DocumentController {
     @Param("id") id: string,
   ) {
     return this.documentService.getOwnedOrThrow(user.userId, id);
+  }
+
+  @Post(":id/process")
+  @HttpCode(HttpStatus.ACCEPTED)
+  async process(
+    @CurrentUser() user: CurrentUserData,
+    @Param("id") id: string,
+  ) {
+    const document = await this.documentService.getOwnedOrThrow(user.userId, id);
+    assertProcessable(document.status);
+    void this.documentService
+      .processDocument(user.userId, id)
+      .catch(() => undefined);
+    return { accepted: true, documentId: id };
   }
 }

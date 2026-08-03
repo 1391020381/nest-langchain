@@ -5,9 +5,16 @@ import { AuthModule } from "./auth/auth.module";
 import { ConversationModule } from "./conversation/conversation.module";
 import { DocumentModule } from "./document/document.module";
 import { PrismaModule } from "./prisma/prisma.module";
+import { SearchModule } from "./search/search.module";
 
 @Module({
-  imports: [PrismaModule, AuthModule, ConversationModule, DocumentModule],
+  imports: [
+    PrismaModule,
+    AuthModule,
+    ConversationModule,
+    DocumentModule,
+    SearchModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
