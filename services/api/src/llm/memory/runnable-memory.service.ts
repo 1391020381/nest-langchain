@@ -3,10 +3,7 @@ import {
   ChatPromptTemplate,
   MessagesPlaceholder,
 } from "@langchain/core/prompts";
-import {
-  RunnablePassthrough,
-  RunnableWithMessageHistory,
-} from "@langchain/core/runnables";
+import { RunnablePassthrough } from "@langchain/core/runnables";
 import { InMemoryChatMessageHistory } from "@langchain/core/chat_history";
 import { trimMessages, type BaseMessage } from "@langchain/core/messages";
 import { createChatModel } from "../model.factory";
@@ -41,30 +38,23 @@ export class RunnableMemoryService {
   });
 
   private chain = RunnablePassthrough.assign({
-    history: async (input: { history: BaseMessage[] }) =>
+    history: async (input: { input: string; history: BaseMessage[] }) =>
       this.trimmer.invoke(input.history),
   })
     .pipe(this.prompt)
     .pipe(this.model);
 
-  private withHistory = new RunnableWithMessageHistory({
-    runnable: this.chain,
-    getMessageHistory: this.getSessionHistory,
-    inputMessagesKey: "input",
-    historyMessagesKey: "history",
-  });
-
   async chat(sessionId: string, input: string) {
-    const response = await this.withHistory.invoke(
-      { input },
-      { configurable: { sessionId } }
-    );
-    return {
-      response:
-        typeof response.content === "string"
-          ? response.content
-          : String(response.content ?? ""),
-    };
+    const messageHistory = this.getSessionHistory(sessionId);
+    const history = await messageHistory.getMessages();
+    const response = await this.chain.invoke({ input, history });
+    const content =
+      typeof response.content === "string"
+        ? response.content
+        : String(response.content ?? "");
+    await messageHistory.addUserMessage(input);
+    await messageHistory.addAIMessage(content);
+    return { response: content };
   }
 
   async getHistory(sessionId: string) {
