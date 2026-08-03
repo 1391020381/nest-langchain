@@ -39,3 +39,7 @@ temp/
 # Ch4 runtime ticket artifacts
 services/api/workspace/tickets/*
 !services/api/workspace/tickets/.gitkeep
+
+# chat uploads
+services/chat/uploads/**
+!services/chat/uploads/.gitkeep
