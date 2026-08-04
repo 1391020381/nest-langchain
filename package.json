@@ -8,6 +8,8 @@
     "dev": "bun run clean:ports && turbo run dev --parallel --filter=@autix/chat --filter=@autix/chat-web",
     "dev:chat-web": "turbo run dev --filter=@autix/chat-web",
     "dev:chat": "turbo run dev --filter=@autix/chat",
+    "demo:langgraph": "bun --cwd services/langGraph demo",
+    "test:langgraph": "bun --cwd services/langGraph test",
     "dev:api": "turbo run dev --filter=@autix/api",
     "dev:web": "turbo run dev --filter=@autix/web",
     "dev:langchain": "bun run clean:ports && turbo run dev --parallel --filter=@autix/api --filter=@autix/web",
