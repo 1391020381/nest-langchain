@@ -1320,7 +1320,7 @@ export async function createConversation(token: string) {
 }
 ```
 
-Check actual auth response field name in `auth.service.ts` and match it exactly (`access_token` vs `accessToken`).
+Auth response field is `accessToken` (confirmed in `auth.service.ts`).
 
 - [ ] **Step 2: Implement AIChatContainer**
 
