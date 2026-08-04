@@ -67,6 +67,7 @@ export function AIChatContainer({
 
     let content = "";
     let components: UIResponse[] | undefined;
+    let settled = false;
 
     try {
       await analyzeStream(token, conversationId, (msg) => {
@@ -108,11 +109,13 @@ export function AIChatContainer({
           }
           case "error": {
             const p = msg.payload as { message: string } | null;
+            settled = true;
             setError(p?.message ?? "stream error");
             setStreamingMessage(null);
             break;
           }
           case "done":
+            settled = true;
             setMessages((prev) => [
               ...prev,
               {
@@ -128,8 +131,22 @@ export function AIChatContainer({
         }
       });
     } catch (err) {
+      settled = true;
       setError(err instanceof Error ? err.message : "analyze stream failed");
       setStreamingMessage(null);
+    } finally {
+      if (!settled) {
+        setStreamingMessage(null);
+        setError((prev) => prev ?? "stream ended unexpectedly");
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "ai",
+            content: content || "分析中断，请重试。",
+            components,
+          },
+        ]);
+      }
     }
   };
 
@@ -155,6 +172,13 @@ export function AIChatContainer({
     setLoading(true);
     setError(null);
     try {
+      if (
+        action.payload.type === "click" &&
+        action.payload.actionId === "retry_analyze"
+      ) {
+        await runAnalyzeStream();
+        return;
+      }
       const data = await uiAction(token, conversationId, action);
       addAIMessage(data);
       if (data.streamSuggested) {

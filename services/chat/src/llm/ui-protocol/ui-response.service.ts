@@ -54,11 +54,10 @@ export class UIResponseService {
       return validateUIResponse({ ...raw, version: "1.0" });
     } catch (err) {
       this.logger.error(
-        `structured generation failed: ${err instanceof Error ? err.name : "unknown"}`,
+        `structured generation failed: ${err instanceof Error ? err.message : String(err)}`,
+        err instanceof Error ? err.stack : undefined,
       );
-      return buildFallbackUIResponse(
-        err instanceof Error ? err.message : "unknown error",
-      );
+      return buildFallbackUIResponse("structured output failed");
     }
   }
 

@@ -98,12 +98,7 @@ export async function analyzeStream(
   const decoder = new TextDecoder();
   let buffer = "";
 
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    buffer += decoder.decode(value, { stream: true });
-    const parts = buffer.split("\n\n");
-    buffer = parts.pop() ?? "";
+  const emitParts = (parts: string[]) => {
     for (const part of parts) {
       const line = part
         .split("\n")
@@ -114,5 +109,22 @@ export async function analyzeStream(
       if (!json || json === "[DONE]") continue;
       onMessage(JSON.parse(json) as StreamMessage);
     }
+  };
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) {
+      buffer += decoder.decode();
+      break;
+    }
+    buffer += decoder.decode(value, { stream: true });
+    const parts = buffer.split("\n\n");
+    buffer = parts.pop() ?? "";
+    emitParts(parts);
+  }
+
+  // Flush trailing buffer (final event may lack trailing \n\n)
+  if (buffer.trim()) {
+    emitParts([buffer]);
   }
 }
