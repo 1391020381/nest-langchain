@@ -49,7 +49,7 @@
 | [ ] | 第三章 | [5-第三章](./AI%20Agents%20开发实践/5-第三章：LangChain%20起手——搭建第一条服务端能力链路.md) · [API 流程速查](./5a-第三章附录：LangChain%20编程%20API%20使用流程速查.md) | — |
 | [x] | 第四章 | [6-第四章](./AI%20Agents%20开发实践/6-第四章：LangChain%20进阶——记忆、工具与多%20Agent.md) | — |
 | [ ] | 第五章 | [7-第五章](./AI%20Agents%20开发实践/7-第五章：从%20Mock%20到生产——数据库设计与向量化落库.md) | — |
-| [ ] | 第六章 | [8-第六章](./AI%20Agents%20开发实践/8-第六章：让%20AI%20做更懂你的交互.md) | feat/ui（文中提及） |
+| [ ] | 第六章 | [8-第六章](./AI%20Agents%20开发实践/8-第六章：让%20AI%20做更懂你的交互.md) · [Ch6 UI Runbook](./chat/ch6-ui-runbook.md) · [Spec](./superpowers/specs/2026-08-04-langchain-ch6-ai-ui-design.md) · [Plan](./superpowers/plans/2026-08-04-langchain-ch6-ai-ui.md) | 本仓 `feat/LangChain-Advanced-UI` · 协议参考 [feat/ai-ui](https://github.com/Cookieboty/autix-demo/tree/feat/ai-ui) |
 | [ ] | 第七章 | [9-第七章](./AI%20Agents%20开发实践/9-第七章：Agent%20推理的三层决策机制：路由、执行与优化.md) | — |
 | [ ] | 第八章 | [10-第八章](./AI%20Agents%20开发实践/10-第八章：LangGraph%20单%20Agent%20图实战——路由、循环与质量闭环.md) | [feat/LangGraph](https://github.com/Cookieboty/autix-demo/tree/feat/LangGraph) |
 | [ ] | 第九章 | [11-第九章](./AI%20Agents%20开发实践/11-第九章：LangGraph%20Multi-Agent%20实战.md) | [feat/LangGraph](https://github.com/Cookieboty/autix-demo/tree/feat/LangGraph) |
