@@ -16,7 +16,7 @@
     "incremental": true,
     "plugins": [{ "name": "next" }],
     "paths": {
-      "@/*": ["./src/*"],
+      "@/*": ["./*"],
       "@autix/contracts": ["../../packages/contracts/src/index.ts"],
       "@autix/contracts/*": ["../../packages/contracts/src/*"]
     }
