@@ -13,6 +13,7 @@ import { UIResponseService } from "./ui-response.service";
 import type {
   AIUIResponse,
   AIUIResponseWithStreamHint,
+  StreamMessage,
   UIAction,
 } from "./ui-types";
 import { validateUIResponse } from "./ui-validate";
@@ -114,5 +115,83 @@ export class UIChatService {
     };
     await historyDb.addMessage("ai", withCtx.message, { ui: withCtx });
     return withCtx;
+  }
+
+  async *analyzeStream(
+    userId: string,
+    conversationId: string,
+  ): AsyncGenerator<StreamMessage> {
+    await this.conversations.getOwnedOrThrow(userId, conversationId);
+    const rows = await this.prisma.message.findMany({
+      where: { conversationId },
+      orderBy: { createdAt: "asc" },
+    });
+    const collected = extractCollectedData(rows);
+    const now = () => new Date().toISOString();
+    const messageId = `ui-${Date.now()}`;
+
+    yield {
+      messageType: "progress",
+      timestamp: now(),
+      payload: { step: 1, totalSteps: 3, agent: "prepare", status: "started" },
+    };
+    yield {
+      messageType: "progress",
+      timestamp: now(),
+      payload: {
+        step: 2,
+        totalSteps: 3,
+        agent: "orchestrate",
+        status: "started",
+      },
+    };
+
+    let ui: AIUIResponse;
+    try {
+      ui = await this.orchestrateAdapter.analyze(
+        collected,
+        "用户确认提交分析",
+      );
+    } catch (err) {
+      yield {
+        messageType: "error",
+        timestamp: now(),
+        payload: {
+          message: err instanceof Error ? err.message : "analyze failed",
+        },
+      };
+      return; // do not persist
+    }
+
+    yield {
+      messageType: "progress",
+      timestamp: now(),
+      payload: {
+        step: 3,
+        totalSteps: 3,
+        agent: "orchestrate",
+        status: "completed",
+      },
+    };
+
+    yield {
+      messageType: "markdown",
+      timestamp: now(),
+      payload: { content: ui.message, isChunk: false, messageId },
+    };
+
+    yield {
+      messageType: "ui",
+      timestamp: now(),
+      payload: { messageId, components: ui.components, thinking: undefined },
+    };
+
+    const historyDb = new DatabaseChatMessageHistory(
+      this.prisma,
+      conversationId,
+    );
+    await historyDb.addMessage("ai", ui.message, { ui });
+
+    yield { messageType: "done", timestamp: now(), payload: null };
   }
 }

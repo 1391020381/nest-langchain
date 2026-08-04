@@ -1,9 +1,11 @@
-import { Body, Controller, Param, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Param, Post, Res, UseGuards } from "@nestjs/common";
+import type { Response } from "express";
 import {
   CurrentUser,
   type CurrentUserData,
 } from "../../auth/current-user.decorator";
 import { JwtAuthGuard } from "../../auth/jwt-auth.guard";
+import { formatSse } from "./stream-format";
 import { UIChatService } from "./ui-chat.service";
 import type { UIAction } from "./ui-types";
 
@@ -28,5 +30,37 @@ export class UIChatController {
     @Body() body: { action: UIAction },
   ) {
     return this.uiChat.action(user.userId, conversationId, body.action);
+  }
+
+  @Post(":conversationId/analyze/stream")
+  async analyzeStream(
+    @CurrentUser() user: CurrentUserData,
+    @Param("conversationId") conversationId: string,
+    @Res() res: Response,
+  ) {
+    res.setHeader("Content-Type", "text/event-stream");
+    res.setHeader("Cache-Control", "no-cache");
+    res.setHeader("Connection", "keep-alive");
+    res.flushHeaders?.();
+    try {
+      for await (const msg of this.uiChat.analyzeStream(
+        user.userId,
+        conversationId,
+      )) {
+        res.write(formatSse(msg));
+      }
+    } catch (err) {
+      res.write(
+        formatSse({
+          messageType: "error",
+          timestamp: new Date().toISOString(),
+          payload: {
+            message: err instanceof Error ? err.message : "error",
+          },
+        }),
+      );
+    } finally {
+      res.end();
+    }
   }
 }
