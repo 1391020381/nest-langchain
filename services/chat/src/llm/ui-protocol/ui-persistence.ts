@@ -4,6 +4,11 @@ export function formatActionContent(action: UIAction): string {
   return `[UI 操作: ${action.componentType} → ${action.payload.type}]`;
 }
 
+/** confirm=true → streamSuggested; skip generateUIResponse / orchestrate */
+export function isConfirmAnalyze(action: UIAction): boolean {
+  return action.payload.type === "confirm" && action.payload.confirmed === true;
+}
+
 export function extractCollectedData(
   messages: Array<{ role: string; metadata: unknown }>,
 ): Record<string, unknown> {

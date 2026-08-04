@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 import {
   extractCollectedData,
   formatActionContent,
+  isConfirmAnalyze,
   mergeCollectedData,
 } from "../src/llm/ui-protocol/ui-persistence";
 import type { UIAction } from "../src/llm/ui-protocol/ui-types";
@@ -53,6 +54,29 @@ describe("formatActionContent", () => {
         payload: { type: "select", selectedId: "functional" },
       }),
     ).toBe("[UI 操作: selection → select]");
+  });
+});
+
+describe("isConfirmAnalyze", () => {
+  test("true only when payload is confirm and confirmed=true", () => {
+    expect(
+      isConfirmAnalyze({
+        componentType: "confirmation",
+        payload: { type: "confirm", confirmed: true },
+      }),
+    ).toBe(true);
+    expect(
+      isConfirmAnalyze({
+        componentType: "confirmation",
+        payload: { type: "confirm", confirmed: false },
+      }),
+    ).toBe(false);
+    expect(
+      isConfirmAnalyze({
+        componentType: "selection",
+        payload: { type: "select", selectedId: "functional" },
+      }),
+    ).toBe(false);
   });
 });
 
