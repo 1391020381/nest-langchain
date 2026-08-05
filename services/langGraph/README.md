@@ -1,5 +1,7 @@
 # LangGraph 学习服务
 
+**本仓分支：** `feat/LangChain-LangGraph`（与 `feat/LangChain-Advanced-UI` 分离；官方对照 [autix-demo feat/LangGraph](https://github.com/Cookieboty/autix-demo/tree/feat/LangGraph)）。
+
 这个 workspace 把第八章和第九章的知识点收敛成一个可以独立运行、独立测试的示例，不侵入现有 `api` 和 `chat` 服务。
 
 ## 覆盖的知识点

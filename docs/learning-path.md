@@ -51,8 +51,8 @@
 | [ ] | 第五章 | [7-第五章](./AI%20Agents%20开发实践/7-第五章：从%20Mock%20到生产——数据库设计与向量化落库.md) | — |
 | [ ] | 第六章 | [8-第六章](./AI%20Agents%20开发实践/8-第六章：让%20AI%20做更懂你的交互.md) · [Ch6 UI Runbook](./chat/ch6-ui-runbook.md) · [Spec](./superpowers/specs/2026-08-04-langchain-ch6-ai-ui-design.md) · [Plan](./superpowers/plans/2026-08-04-langchain-ch6-ai-ui.md) | 本仓 `feat/LangChain-Advanced-UI` · 协议参考 [feat/ai-ui](https://github.com/Cookieboty/autix-demo/tree/feat/ai-ui) |
 | [ ] | 第七章 | [9-第七章](./AI%20Agents%20开发实践/9-第七章：Agent%20推理的三层决策机制：路由、执行与优化.md) | — |
-| [ ] | 第八章 | [10-第八章](./AI%20Agents%20开发实践/10-第八章：LangGraph%20单%20Agent%20图实战——路由、循环与质量闭环.md) | [feat/LangGraph](https://github.com/Cookieboty/autix-demo/tree/feat/LangGraph) |
-| [ ] | 第九章 | [11-第九章](./AI%20Agents%20开发实践/11-第九章：LangGraph%20Multi-Agent%20实战.md) | [feat/LangGraph](https://github.com/Cookieboty/autix-demo/tree/feat/LangGraph) |
+| [ ] | 第八章 | [10-第八章](./AI%20Agents%20开发实践/10-第八章：LangGraph%20单%20Agent%20图实战——路由、循环与质量闭环.md) | 本仓 `feat/LangChain-LangGraph` · 官方对照 [feat/LangGraph](https://github.com/Cookieboty/autix-demo/tree/feat/LangGraph) |
+| [ ] | 第九章 | [11-第九章](./AI%20Agents%20开发实践/11-第九章：LangGraph%20Multi-Agent%20实战.md) | 本仓 `feat/LangChain-LangGraph` · 官方对照 [feat/LangGraph](https://github.com/Cookieboty/autix-demo/tree/feat/LangGraph) |
 | [ ] | 第十章 | [12-第十章](./AI%20Agents%20开发实践/12-第十章：Token%20经济学：在%20AI%20能力与运行成本之间寻找平衡.md) | [feat/token](https://github.com/Cookieboty/autix-demo/tree/feat/token) |
 | [ ] | 第十一章 | [13-第十一章](./AI%20Agents%20开发实践/13-第十一章：RAG——让AI更懂你的业务.md) | [feat/rag](https://github.com/Cookieboty/autix-demo/tree/feat/rag) |
 | [ ] | 第十二章 | [14-第十二章](./AI%20Agents%20开发实践/14-第十二章：MCP——工具调用的操作系统.md) | [feat/mcp](https://github.com/Cookieboty/autix-demo/tree/feat/mcp) |
