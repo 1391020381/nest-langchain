@@ -18,5 +18,8 @@
   "devDependencies": {
     "turbo": "^2.8.20",
     "wait-on": "^9.0.5"
+  },
+  "overrides": {
+    "@langchain/openai": "1.5.5"
   }
 }

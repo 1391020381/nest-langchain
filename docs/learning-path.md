@@ -26,7 +26,7 @@
 - [ ] 第十一章：RAG
 - [ ] 第十二章：MCP
 - [ ] 第十三章：Skills
-- [ ] 第十四章：DeepAgent（Harness）
+- [x] 第十四章：DeepAgent（Harness）
 - [ ] 第十五章：DeepAgent（长链任务与自主规划）
 - [ ] 第十六章：可观测性
 - [ ] 第十七章：评估流水线
@@ -36,7 +36,7 @@
 - [ ] 终章：复盘与前瞻
 - [ ] 面试篇：Agent 基础与编排
 
-当前下一步：阅读并实践 **第五章**（数据库设计与向量化落库）。
+当前下一步：阅读并实践 **第十五章**（DeepAgent 长链任务与自主规划）。
 
 ## 章节索引
 
@@ -57,7 +57,7 @@
 | [ ] | 第十一章 | [13-第十一章](./AI%20Agents%20开发实践/13-第十一章：RAG——让AI更懂你的业务.md) | [feat/rag](https://github.com/Cookieboty/autix-demo/tree/feat/rag) |
 | [ ] | 第十二章 | [14-第十二章](./AI%20Agents%20开发实践/14-第十二章：MCP——工具调用的操作系统.md) | [feat/mcp](https://github.com/Cookieboty/autix-demo/tree/feat/mcp) |
 | [ ] | 第十三章 | [15-第十三章](./AI%20Agents%20开发实践/15-第十三章：Skills——把最佳实践沉淀为能力资产.md) | [feat/skills](https://github.com/Cookieboty/autix-demo/tree/feat/skills) |
-| [ ] | 第十四章 | [16-第十四章](./AI%20Agents%20开发实践/16-第十四章：DeepAgent——一个开箱即用的%20Agent%20Harness.md) | — |
+| [x] | 第十四章 | [16-第十四章](./AI%20Agents%20开发实践/16-第十四章：DeepAgent——一个开箱即用的%20Agent%20Harness.md) | 本仓 `feat/DeepAgent` · 官方对照 [feat/deepagents](https://github.com/Cookieboty/autix-demo/tree/feat/deepagents) |
 | [ ] | 第十五章 | [17-第十五章](./AI%20Agents%20开发实践/17-第十五章：DeepAgent——长链任务与自主规划.md) | [feat/deepagents](https://github.com/Cookieboty/autix-demo/tree/feat/deepagents) |
 | [ ] | 第十六章 | [18-第十六章](./AI%20Agents%20开发实践/18-第十六章：可观测性——你不能优化你看不见的东西.md) | [feat/observability](https://github.com/Cookieboty/autix-demo/tree/feat/ch16-observability) |
 | [ ] | 第十七章 | [19-第十七章](./AI%20Agents%20开发实践/19-第十七章：评估流水线——给%20Agent%20装质检线.md) | [feat/eval](https://github.com/Cookieboty/autix-demo/tree/feat/ch17-eval) |
