@@ -11,6 +11,7 @@
     "test": "bun test",
     "demo:deepagent-hello": "bun run scripts/run-deepagent-hello.ts",
     "demo:deepagent-research": "bun run scripts/run-deepagent-research-demo.ts",
+    "demo:deepagent-harness": "bun run scripts/run-deepagent-harness-features-demo.ts",
     "prisma:generate": "bunx prisma generate",
     "prisma:migrate": "bunx prisma migrate dev"
   },

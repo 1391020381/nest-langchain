@@ -43,3 +43,6 @@ services/api/workspace/tickets/*
 # chat uploads
 services/chat/uploads/**
 !services/chat/uploads/.gitkeep
+
+# DeepAgent demo workspace
+services/chat/.deepagent-work/
