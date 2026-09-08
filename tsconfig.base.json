@@ -4,7 +4,8 @@
     "lib": ["ES2022"],
     "paths": {
       "@autix/contracts": ["./packages/contracts/src/index.ts"],
-      "@autix/contracts/*": ["./packages/contracts/src/*"]
+      "@autix/contracts/*": ["./packages/contracts/src/*"],
+      "@autix/deepagent-contracts": ["./packages/deepagent-contracts/src/index.ts"]
     }
   }
 }

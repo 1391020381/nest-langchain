@@ -1,6 +1,6 @@
 # AI Agents 开发实践 · 学习路线
 
-本仓库已切换为《AI Agents 开发实践》跟书路线。
+本文只记录《AI Agents 开发实践》的**教材渐进路线**。教材继续从 LangChain、LangGraph 与向量/RAG 的底层能力出发，最后在第十四、十五章进入 DeepAgent 与迁移实践。
 
 - **课本**：[`docs/AI Agents 开发实践/`](./AI%20Agents%20开发实践/)
 - **工程**：按章从零在本仓库生成（Bun monorepo：`clients/` / `services/` / `packages/`）
@@ -8,6 +8,17 @@
 - **旧 Nest 练习文档**：已移至 [`docs/archive/`](./archive/)，不再作为主线
 
 学习方式：读章 → 按章内步骤/Prompt 在本仓实现 → 对照验收点 → 勾选进度 → 进入下一章。
+
+## 两条路线如何选择
+
+| 路线 | 入口 | 适合目标 | 实现目录 |
+| --- | --- | --- | --- |
+| 教材渐进路线 | 本文下方章节索引 | 理解 LangChain/向量基础 → LangGraph → RAG → DeepAgent 的演进与迁移 | 既有教材配套工程 |
+| DeepAgent-first 工程路线 | [DeepAgent-first 实践指南](./deepagent-first/README.md) | 不先手写一套 Chain/StateGraph，直接用 DeepAgent Harness 建设当前项目 | `services/deepagent-api`、`clients/deepagent-web`、`packages/deepagent-contracts` |
+
+两条路线并不冲突。DeepAgent 建立在 LangChain 与 LangGraph 的基础能力之上；“DeepAgent-first”表示工程从 Harness 起步，而不是删除或否认底层依赖。下方勾选框仅表示教材路线的学习进度，新工程的实现与验证状态以独立指南为准。
+
+当前工程针对锁定依赖采用 `streamEvents` v2 raw-event 适配；这是失败路径稳定性上的工程兼容决策，不改变教材对 DeepAgent/LangGraph 原理和其他事件 API 的讲解。具体原因与回归测试见 DeepAgent-first 指南。
 
 ## 当前学习进度
 
