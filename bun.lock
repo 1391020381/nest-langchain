@@ -42,6 +42,22 @@
         "typescript": "^5.7.0",
       },
     },
+    "clients/requirement-deepagent-web": {
+      "name": "@autix/requirement-deepagent-web",
+      "version": "0.0.0",
+      "dependencies": {
+        "@autix/requirement-deepagent-contracts": "workspace:*",
+        "next": "16.2.3",
+        "react": "19.2.4",
+        "react-dom": "19.2.4",
+      },
+      "devDependencies": {
+        "@types/node": "^22",
+        "@types/react": "^19",
+        "@types/react-dom": "^19",
+        "typescript": "^5.7.0",
+      },
+    },
     "clients/web": {
       "name": "@autix/web",
       "version": "0.0.0",
@@ -92,6 +108,13 @@
       "devDependencies": {
         "@types/node": "^22.0.0",
         "@types/pdf-parse": "^1.1.5",
+        "typescript": "^5.7.0",
+      },
+    },
+    "packages/requirement-deepagent-contracts": {
+      "name": "@autix/requirement-deepagent-contracts",
+      "version": "0.0.0",
+      "devDependencies": {
         "typescript": "^5.7.0",
       },
     },
@@ -187,6 +210,29 @@
         "typescript": "^5.7.0",
       },
     },
+    "services/requirement-deepagent-api": {
+      "name": "@autix/requirement-deepagent-api",
+      "version": "0.0.0",
+      "dependencies": {
+        "@autix/requirement-deepagent-contracts": "workspace:*",
+        "@langchain/core": "^1.2.4",
+        "@langchain/openai": "1.5.5",
+        "@nestjs/common": "^11.0.0",
+        "@nestjs/core": "^11.0.0",
+        "@nestjs/platform-express": "^11.0.0",
+        "deepagents": "1.10.2",
+        "dotenv": "^17.4.2",
+        "reflect-metadata": "^0.2.0",
+        "rxjs": "^7.8.0",
+        "zod": "^3.23.8",
+      },
+      "devDependencies": {
+        "@nestjs/cli": "^11.0.0",
+        "@types/express": "^5.0.0",
+        "@types/node": "^22.0.0",
+        "typescript": "^5.7.0",
+      },
+    },
   },
   "overrides": {
     "@langchain/openai": "1.5.5",
@@ -213,6 +259,12 @@
     "@autix/deepagent-web": ["@autix/deepagent-web@workspace:clients/deepagent-web"],
 
     "@autix/llm-core": ["@autix/llm-core@workspace:packages/llm-core"],
+
+    "@autix/requirement-deepagent-api": ["@autix/requirement-deepagent-api@workspace:services/requirement-deepagent-api"],
+
+    "@autix/requirement-deepagent-contracts": ["@autix/requirement-deepagent-contracts@workspace:packages/requirement-deepagent-contracts"],
+
+    "@autix/requirement-deepagent-web": ["@autix/requirement-deepagent-web@workspace:clients/requirement-deepagent-web"],
 
     "@autix/web": ["@autix/web@workspace:clients/web"],
 

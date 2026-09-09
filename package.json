@@ -9,6 +9,7 @@
     "dev:deepagent": "bun scripts/dev-deepagent.ts",
     "dev:deepagent-api": "bun scripts/dev-deepagent.ts api",
     "dev:deepagent-web": "bun scripts/dev-deepagent.ts web",
+    "dev:requirement-deepagent": "turbo run dev --parallel --filter=@autix/requirement-deepagent-api --filter=@autix/requirement-deepagent-web",
     "dev:legacy-chat": "bun run clean:ports && turbo run dev --parallel --filter=@autix/chat --filter=@autix/chat-web",
     "dev:chat-web": "turbo run dev --filter=@autix/chat-web",
     "dev:chat": "turbo run dev --filter=@autix/chat",
@@ -18,6 +19,9 @@
     "build:deepagent": "turbo run build --filter=@autix/deepagent-api --filter=@autix/deepagent-web",
     "typecheck:deepagent": "turbo run typecheck --filter=@autix/deepagent-api --filter=@autix/deepagent-web",
     "test:deepagent": "turbo run test --filter=@autix/deepagent-api --filter=@autix/deepagent-web",
+    "build:requirement-deepagent": "turbo run build --filter=@autix/requirement-deepagent-api --filter=@autix/requirement-deepagent-web",
+    "typecheck:requirement-deepagent": "bunx tsc -p packages/requirement-deepagent-contracts/tsconfig.json && turbo run typecheck --filter=@autix/requirement-deepagent-api --filter=@autix/requirement-deepagent-web",
+    "test:requirement-deepagent": "turbo run test --filter=@autix/requirement-deepagent-contracts --filter=@autix/requirement-deepagent-api --filter=@autix/requirement-deepagent-web",
     "build": "turbo run build",
     "typecheck": "turbo run typecheck",
     "lint": "turbo run lint"

@@ -1,0 +1,32 @@
+{
+  "name": "@autix/requirement-deepagent-api",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "bun --watch src/main.ts",
+    "build": "nest build",
+    "start": "bun run dist/main.js",
+    "typecheck": "tsc --noEmit --incremental false",
+    "lint": "bun run typecheck",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@autix/requirement-deepagent-contracts": "workspace:*",
+    "@langchain/core": "^1.2.4",
+    "@langchain/openai": "1.5.5",
+    "@nestjs/common": "^11.0.0",
+    "@nestjs/core": "^11.0.0",
+    "@nestjs/platform-express": "^11.0.0",
+    "deepagents": "1.10.2",
+    "dotenv": "^17.4.2",
+    "reflect-metadata": "^0.2.0",
+    "rxjs": "^7.8.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^11.0.0",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "@autix/requirement-deepagent-web",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --hostname 0.0.0.0 --port 3200",
+    "build": "next build",
+    "start": "next start --hostname 0.0.0.0 --port 3200",
+    "typecheck": "tsc -p tsconfig.validate.json --noEmit",
+    "lint": "bun run typecheck",
+    "test": "bun test lib"
+  },
+  "dependencies": {
+    "@autix/requirement-deepagent-contracts": "workspace:*",
+    "next": "16.2.3",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "typescript": "^5.7.0"
+  }
+}
