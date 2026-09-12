@@ -1,5 +1,7 @@
 import { describe, expect, it } from "bun:test";
 import type {
+  ClarificationAnswer,
+  ClarificationQuestion,
   RequirementArtifact,
   RequirementTodo,
 } from "@autix/requirement-deepagent-contracts";
@@ -26,10 +28,33 @@ const runtimeConfig = {
   runTimeoutMs: 300_000,
   recursionLimit: 60,
 };
+const questions: ClarificationQuestion[] = [
+  {
+    id: "max_rows",
+    field: "scope_limit",
+    label: "单次数据上限",
+    prompt: "单次最多允许导入多少行？",
+    required: true,
+    placeholder: "例如：10,000 行",
+  },
+];
+const clarificationEvent: RequirementRuntimeEvent = {
+  type: "clarification.required",
+  assessment: {
+    complete: false,
+    score: 0.4,
+    missingFields: ["scope_limit"],
+    reason: "缺少会影响方案和验收的处理上限。",
+  },
+  questions,
+};
 
 function runtimeFrom(events: RequirementRuntimeEvent[]): RequirementRuntime {
   return {
     async *stream() {
+      yield* events;
+    },
+    async *resume() {
       yield* events;
     },
   };
@@ -41,6 +66,23 @@ async function collect(service: AgentService, signal?: AbortSignal) {
     { input: "分析批量导入需求", threadId: "thread-test" },
     signal,
   )) {
+    events.push(event);
+  }
+  return events;
+}
+
+async function collectResume(
+  service: AgentService,
+  runId: string,
+  answers: ClarificationAnswer[],
+  requestId = "resume-request-1",
+) {
+  const events = [];
+  for await (const event of service.resume(runId, {
+    threadId: "thread-test",
+    requestId,
+    answers,
+  })) {
     events.push(event);
   }
   return events;
@@ -83,6 +125,7 @@ describe("AgentService event lifecycle", () => {
         runtimeCalls += 1;
         yield { type: "plan.updated", todos };
       },
+      async *resume() {},
     };
     const service = new AgentService(runtime, runtimeConfig);
     const controller = new AbortController();
@@ -109,6 +152,7 @@ describe("AgentService event lifecycle", () => {
       async *stream(): AsyncGenerator<RequirementRuntimeEvent> {
         throw new Error("provider leaked a private detail");
       },
+      async *resume() {},
     };
     const events = await collect(new AgentService(runtime, runtimeConfig));
 
@@ -117,5 +161,90 @@ describe("AgentService event lifecycle", () => {
     });
     expect(events.at(-1)).toMatchObject({ type: "run.done", status: "failed" });
     expect(JSON.stringify(events)).not.toContain("private detail");
+  });
+
+  it("pauses without a report and resumes the same run after clarification", async () => {
+    let resumeCalls = 0;
+    const runtime: RequirementRuntime = {
+      async *stream() {
+        yield clarificationEvent;
+      },
+      async *resume(answers) {
+        resumeCalls += 1;
+        expect(answers).toEqual([
+          { questionId: "max_rows", value: "最多 10,000 行" },
+        ]);
+        yield {
+          type: "report.completed",
+          report: `${artifact.content}\n\n上限：最多 10,000 行`,
+          artifacts: [artifact],
+          todos,
+          usedAgents: ["requirement-coordinator", "requirement-analyst"],
+        };
+      },
+    };
+    const service = new AgentService(runtime, runtimeConfig);
+    const initial = await collect(service);
+    const runId = initial[0]!.runId;
+
+    expect(initial.map((event) => event.type)).toEqual([
+      "run.started",
+      "clarification.required",
+      "run.paused",
+    ]);
+    expect(initial.some((event) => event.type === "report.completed")).toBe(false);
+    expect(initial.some((event) => event.type === "run.done")).toBe(false);
+
+    const resumed = await collectResume(service, runId, [
+      { questionId: "max_rows", value: "最多 10,000 行" },
+    ]);
+    expect(resumeCalls).toBe(1);
+    expect(resumed.map((event) => event.type)).toEqual([
+      "run.resumed",
+      "report.completed",
+      "run.done",
+    ]);
+    expect(resumed.every((event) => event.runId === runId)).toBe(true);
+    expect(resumed.every((event) => event.threadId === "thread-test")).toBe(true);
+    expect([...initial, ...resumed].map((event) => event.sequence)).toEqual([
+      1, 2, 3, 4, 5, 6,
+    ]);
+    expect(() =>
+      service.validateResumeRequest(runId, {
+        threadId: "thread-test",
+        requestId: "resume-request-1",
+        answers: [{ questionId: "max_rows", value: "最多 10,000 行" }],
+      }),
+    ).toThrow("已经处理");
+    expect(resumeCalls).toBe(1);
+  });
+
+  it("rejects missing required answers before resuming the runtime", async () => {
+    const service = new AgentService(runtimeFrom([clarificationEvent]), runtimeConfig);
+    const initial = await collect(service);
+    const runId = initial[0]!.runId;
+
+    expect(() =>
+      service.validateResumeRequest(runId, {
+        threadId: "thread-test",
+        requestId: "resume-invalid",
+        answers: [],
+      }),
+    ).toThrow("请回答必填问题");
+  });
+
+  it("cancels a waiting run idempotently", async () => {
+    const service = new AgentService(runtimeFrom([clarificationEvent]), runtimeConfig);
+    const initial = await collect(service);
+    const runId = initial[0]!.runId;
+    const first = service.cancel(runId, { threadId: "thread-test" });
+    const repeated = service.cancel(runId, { threadId: "thread-test" });
+
+    expect(first.events.map((event) => event.type)).toEqual([
+      "run.cancelled",
+      "run.done",
+    ]);
+    expect(first.events.at(-1)).toMatchObject({ status: "cancelled" });
+    expect(repeated.events).toEqual(first.events);
   });
 });

@@ -1,5 +1,8 @@
 import { Inject, Injectable, Optional } from "@nestjs/common";
+import { Command } from "@langchain/langgraph";
+import type { ClarificationAnswer } from "@autix/requirement-deepagent-contracts";
 import { createRequirementDeepAgent } from "../agent.factory";
+import type { ClarificationInterruptPayload } from "../clarification.tool";
 import { REQUIREMENT_COORDINATOR_NAME } from "../root/coordinator.prompt";
 import { REQUIREMENT_ANALYST_NAME } from "../subagents/requirement-analyst";
 import {
@@ -95,6 +98,43 @@ function agentForEvent(
     : REQUIREMENT_COORDINATOR_NAME;
 }
 
+function clarificationPayload(value: unknown): ClarificationInterruptPayload | undefined {
+  const payload = asRecord(value);
+  const assessment = asRecord(payload?.assessment);
+  if (
+    payload?.kind !== "requirement_clarification" ||
+    assessment?.complete !== false ||
+    !Array.isArray(payload.questions)
+  ) {
+    return undefined;
+  }
+  return payload as unknown as ClarificationInterruptPayload;
+}
+
+function clarificationFromState(
+  finalState: unknown,
+  snapshot: unknown,
+): ClarificationInterruptPayload | undefined {
+  const stateInterrupts = asRecord(finalState)?.__interrupt__;
+  if (Array.isArray(stateInterrupts)) {
+    for (const item of stateInterrupts) {
+      const payload = clarificationPayload(asRecord(item)?.value);
+      if (payload) return payload;
+    }
+  }
+  const tasks = asRecord(snapshot)?.tasks;
+  if (!Array.isArray(tasks)) return undefined;
+  for (const task of tasks) {
+    const interrupts = asRecord(task)?.interrupts;
+    if (!Array.isArray(interrupts)) continue;
+    for (const item of interrupts) {
+      const payload = clarificationPayload(asRecord(item)?.value);
+      if (payload) return payload;
+    }
+  }
+  return undefined;
+}
+
 @Injectable()
 export class DeepAgentRuntime implements RequirementRuntime {
   private agent?: ReturnType<typeof createRequirementDeepAgent>;
@@ -121,11 +161,39 @@ export class DeepAgentRuntime implements RequirementRuntime {
     input: string,
     options: RuntimeRunOptions,
   ): AsyncGenerator<RequirementRuntimeEvent> {
+    yield* this.run(
+      { messages: [{ role: "user", content: input }] },
+      options,
+      "开始判断需求完整性并规划分析",
+    );
+  }
+
+  async *resume(
+    answers: ClarificationAnswer[],
+    options: RuntimeRunOptions,
+  ): AsyncGenerator<RequirementRuntimeEvent> {
+    yield* this.run(
+      new Command({
+        resume: {
+          kind: "requirement_clarification_answers",
+          answers,
+        },
+      }),
+      options,
+      "收到澄清答案，继续原需求分析",
+    );
+  }
+
+  private async *run(
+    agentInput: unknown,
+    options: RuntimeRunOptions,
+    startMessage: string,
+  ): AsyncGenerator<RequirementRuntimeEvent> {
     yield {
       type: "agent.progress",
       agent: REQUIREMENT_COORDINATOR_NAME,
       status: "started",
-      message: "开始规划单需求分析",
+      message: startMessage,
     };
 
     let rootRunId: string | undefined;
@@ -134,16 +202,13 @@ export class DeepAgentRuntime implements RequirementRuntime {
     let analystStarted = false;
     let analystCompleted = false;
 
-    const rawEvents = await this.getAgent().streamEvents(
-      {
-        messages: [{ role: "user", content: input }],
-      },
-      {
-        signal: options.signal,
-        recursionLimit: options.recursionLimit,
-        configurable: { thread_id: options.threadId },
-      },
-    );
+    const agent = this.getAgent();
+    const runnableConfig = {
+      signal: options.signal,
+      recursionLimit: options.recursionLimit,
+      configurable: { thread_id: options.threadId },
+    };
+    const rawEvents = await agent.streamEvents(agentInput as never, runnableConfig);
 
     for await (const rawEvent of rawEvents as AsyncIterable<RawStreamEvent>) {
       if (options.signal.aborted) return;
@@ -233,6 +298,17 @@ export class DeepAgentRuntime implements RequirementRuntime {
       }
     }
 
+    const snapshot = await agent.getState(runnableConfig);
+    const clarification = clarificationFromState(finalState, snapshot);
+    if (clarification) {
+      yield {
+        type: "clarification.required",
+        assessment: clarification.assessment,
+        questions: clarification.questions,
+      };
+      return;
+    }
+    finalState = asRecord(snapshot)?.values ?? finalState;
     const artifacts = exportWorkArtifacts(finalState);
     const todos = exportTodos(finalState);
     const report = finalReportFromArtifacts(artifacts);

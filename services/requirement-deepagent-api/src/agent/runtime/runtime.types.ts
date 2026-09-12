@@ -1,5 +1,8 @@
 import type {
   AgentProgressStatus,
+  ClarificationAnswer,
+  ClarificationQuestion,
+  CompletenessAssessment,
   RequirementAgentName,
   RequirementArtifact,
   RequirementTodo,
@@ -41,11 +44,20 @@ export type RequirementRuntimeEvent =
       artifacts: RequirementArtifact[];
       todos: RequirementTodo[];
       usedAgents: RequirementAgentName[];
+    }
+  | {
+      type: "clarification.required";
+      assessment: CompletenessAssessment;
+      questions: ClarificationQuestion[];
     };
 
 export interface RequirementRuntime {
   stream(
     input: string,
+    options: RuntimeRunOptions,
+  ): AsyncGenerator<RequirementRuntimeEvent>;
+  resume(
+    answers: ClarificationAnswer[],
     options: RuntimeRunOptions,
   ): AsyncGenerator<RequirementRuntimeEvent>;
 }

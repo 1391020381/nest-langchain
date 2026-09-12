@@ -48,6 +48,7 @@
 - [目录与复用边界](./03-directory-and-reuse-boundaries.md)：全新目录、模块职责和唯一允许复用的配置。
 - [MVP-0 实施说明](./04-mvp0-implementation.md)：工程结构、诊断链路、启动体验和排错方式。
 - [MVP-1 实施说明](./05-mvp1-implementation.md)：单需求 Agent、SSE、取消、产物和测试闭环。
+- [MVP-2 实施说明](./06-mvp2-implementation.md)：真实中断、结构化澄清、同线程恢复和幂等。
 - [实施进度台账](./PROGRESS.md)：每个 MVP 的状态、日期、验收证据和下一步。
 
 ## 4. 参考章节与本项目取舍
@@ -66,4 +67,4 @@
 
 ## 5. 当前状态
 
-MVP-0 与 MVP-1 已实施：在独立 workspace 中完成模型诊断，以及单需求 Root Agent -> `requirement-analyst` -> `/work/final-report.md` -> Web 展示闭环。默认自动测试不会调用外部模型，真实模型验收必须显式开启。旧业务目录没有被修改或引入。
+MVP-0、MVP-1 与 MVP-2 已实施：在独立 workspace 中完成模型诊断、单需求分析，以及不完整需求通过 `interrupt()` 暂停并以相同 `runId/threadId` 恢复的闭环。默认自动测试不会调用外部模型，真实模型验收必须显式开启。旧业务目录没有被修改或引入。

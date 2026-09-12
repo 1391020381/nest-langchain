@@ -29,4 +29,20 @@ describe("diagnostic API client", () => {
       expect.objectContaining({ type: "run.done", status: "completed" }),
     ]);
   });
+
+  it("decodes the waiting boundary used before a clarification resume", () => {
+    const decoder = new SseEventDecoder();
+    const event = {
+      type: "run.paused",
+      status: "waiting",
+      runId: "run-clarification",
+      threadId: "thread-clarification",
+      sequence: 4,
+      timestamp: new Date(0).toISOString(),
+    };
+
+    expect(
+      decoder.push(`event: run.paused\ndata: ${JSON.stringify(event)}\n\n`),
+    ).toEqual([event]);
+  });
 });

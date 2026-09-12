@@ -430,11 +430,23 @@ footer {
 .reportState { border-color: var(--line); color: #71839c; background: rgba(255,255,255,.025); }
 .markdownReport { max-height: 700px; margin: 24px 0 0; padding: 24px; overflow: auto; white-space: pre-wrap; border: 1px solid rgba(149,173,210,.12); border-radius: 15px; color: #d8e5f6; background: rgba(0,0,0,.16); font-family: inherit; font-size: 14px; line-height: 1.8; }
 .reportEmpty { min-height: 210px; }
+.clarificationPanel { margin-top: 16px; border-color: rgba(242,191,104,.28); background: linear-gradient(135deg, rgba(49,38,22,.72), var(--panel)); }
+.scoreBadge { padding: 7px 10px; border: 1px solid rgba(242,191,104,.25); border-radius: 999px; color: #f4c878; background: rgba(242,191,104,.07); font-size: 11px; font-weight: 800; }
+.clarificationReason { max-width: 850px; margin: 14px 0 22px; color: #b4c0d1; line-height: 1.7; }
+.clarificationFields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.clarificationFields label { display: flex; flex-direction: column; gap: 8px; padding: 16px; border: 1px solid rgba(149,173,210,.12); border-radius: 14px; background: rgba(0,0,0,.12); }
+.clarificationFields label > span { color: #dbe7f8; font-size: 13px; font-weight: 750; }
+.clarificationFields em { margin-left: 8px; color: #f4c878; font-size: 10px; font-style: normal; }
+.clarificationFields small { min-height: 32px; color: #8192aa; line-height: 1.5; }
+.clarificationFields input { width: 100%; padding: 12px 13px; border: 1px solid rgba(149,173,210,.2); border-radius: 10px; outline: none; color: #edf4ff; background: rgba(1,8,18,.42); }
+.clarificationFields input:focus { border-color: rgba(242,191,104,.55); box-shadow: 0 0 0 3px rgba(242,191,104,.07); }
+.clarificationActions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
 
 @media (max-width: 900px) {
   .mvpTopbar { align-items: flex-start; flex-direction: column; }
   .systemChecks { justify-content: flex-start; }
   .mvpWorkbench, .resultGrid { grid-template-columns: 1fr; }
+  .clarificationFields { grid-template-columns: 1fr; }
   .mvpPanel { padding: 20px; }
 }
 
@@ -443,4 +455,5 @@ footer {
   .inputPanel .primaryButton, .dangerButton { flex: auto; }
   .inputMeta { align-items: flex-start; flex-direction: column; }
   .artifactList li { flex-direction: column; }
+  .clarificationActions { align-items: stretch; flex-direction: column-reverse; }
 }

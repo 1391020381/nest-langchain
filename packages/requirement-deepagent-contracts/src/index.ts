@@ -88,6 +88,46 @@ export interface AgentRunRequest {
   threadId?: string;
 }
 
+export interface CompletenessAssessment {
+  complete: false;
+  score: number;
+  missingFields: string[];
+  reason: string;
+}
+
+export interface ClarificationQuestion {
+  id: string;
+  field:
+    | "actor"
+    | "goal"
+    | "input_format"
+    | "scope_limit"
+    | "failure_handling"
+    | "permission"
+    | "audit"
+    | "acceptance"
+    | "other";
+  label: string;
+  prompt: string;
+  required: boolean;
+  placeholder?: string;
+}
+
+export interface ClarificationAnswer {
+  questionId: string;
+  value: string;
+}
+
+export interface AgentResumeRequest {
+  threadId: string;
+  requestId: string;
+  answers: ClarificationAnswer[];
+}
+
+export interface AgentCancelRequest {
+  threadId: string;
+}
+
 export type AgentRunStatus = "completed" | "failed" | "cancelled";
 export type AgentProgressStatus = "started" | "completed" | "failed";
 export type ToolProgressStatus = "started" | "completed" | "failed";
@@ -150,6 +190,19 @@ export type AgentStreamEvent =
       usedAgents: RequirementAgentName[];
     })
   | (AgentStreamEnvelope & {
+      type: "clarification.required";
+      assessment: CompletenessAssessment;
+      questions: ClarificationQuestion[];
+    })
+  | (AgentStreamEnvelope & {
+      type: "run.paused";
+      status: "waiting";
+    })
+  | (AgentStreamEnvelope & {
+      type: "run.resumed";
+      answerCount: number;
+    })
+  | (AgentStreamEnvelope & {
       type: "run.error";
       code:
         | "MODEL_NOT_CONFIGURED"
@@ -166,6 +219,13 @@ export type AgentStreamEvent =
       type: "run.done";
       status: AgentRunStatus;
     });
+
+export interface AgentCancelResponse {
+  runId: string;
+  threadId: string;
+  status: "cancelled";
+  events: AgentStreamEvent[];
+}
 
 export function isAgentStreamEvent(value: unknown): value is AgentStreamEvent {
   if (!value || typeof value !== "object") return false;

@@ -1,4 +1,7 @@
 import type {
+  AgentCancelRequest,
+  AgentCancelResponse,
+  AgentResumeRequest,
   AgentRunRequest,
   AgentStreamEvent,
   LiveHealthResponse,
@@ -104,13 +107,53 @@ export async function streamRequirementAnalysis(
     onEvent: (event: AgentStreamEvent) => void;
   },
 ): Promise<void> {
-  const response = await fetch("/api/agent/runs/stream", {
+  return streamAgentRequest("/api/agent/runs/stream", request, options);
+}
+
+export async function streamRequirementResume(
+  runId: string,
+  request: AgentResumeRequest,
+  options: {
+    signal: AbortSignal;
+    onEvent: (event: AgentStreamEvent) => void;
+  },
+): Promise<void> {
+  return streamAgentRequest(
+    `/api/agent/runs/${encodeURIComponent(runId)}/resume/stream`,
+    request,
+    options,
+  );
+}
+
+export function cancelRequirementRun(
+  runId: string,
+  request: AgentCancelRequest,
+): Promise<AgentCancelResponse> {
+  return requestJson<AgentCancelResponse>(
+    `/api/agent/runs/${encodeURIComponent(runId)}/cancel`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(request),
+    },
+  );
+}
+
+async function streamAgentRequest(
+  path: string,
+  body: AgentRunRequest | AgentResumeRequest,
+  options: {
+    signal: AbortSignal;
+    onEvent: (event: AgentStreamEvent) => void;
+  },
+): Promise<void> {
+  const response = await fetch(path, {
     method: "POST",
     headers: {
       Accept: "text/event-stream",
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(request),
+    body: JSON.stringify(body),
     signal: options.signal,
   });
   if (!response.ok) {
@@ -122,7 +165,7 @@ export async function streamRequirementAnalysis(
   const reader = response.body.getReader();
   const textDecoder = new TextDecoder();
   const eventDecoder = new SseEventDecoder();
-  let terminalReceived = false;
+  let closedCleanly = false;
 
   while (true) {
     const { done, value } = await reader.read();
@@ -130,16 +173,20 @@ export async function streamRequirementAnalysis(
       textDecoder.decode(value, { stream: !done }),
     );
     for (const event of events) {
-      if (event.type === "run.done") terminalReceived = true;
+      if (event.type === "run.done" || event.type === "run.paused") {
+        closedCleanly = true;
+      }
       options.onEvent(event);
     }
     if (done) break;
   }
   for (const event of eventDecoder.finish()) {
-    if (event.type === "run.done") terminalReceived = true;
+    if (event.type === "run.done" || event.type === "run.paused") {
+      closedCleanly = true;
+    }
     options.onEvent(event);
   }
-  if (!terminalReceived && !options.signal.aborted) {
-    throw new Error("事件流在 run.done 之前意外结束。");
+  if (!closedCleanly && !options.signal.aborted) {
+    throw new Error("事件流在 run.done 或 run.paused 之前意外结束。");
   }
 }
