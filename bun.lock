@@ -210,6 +210,21 @@
         "typescript": "^5.7.0",
       },
     },
+    "services/deepagents-in-action": {
+      "name": "@autix/deepagents-in-action",
+      "version": "0.0.0",
+      "dependencies": {
+        "@langchain/core": "^1.2.4",
+        "@langchain/openai": "1.5.5",
+        "deepagents": "1.10.2",
+        "dotenv": "^17.4.2",
+        "zod": "^3.23.8",
+      },
+      "devDependencies": {
+        "@types/node": "^22.0.0",
+        "typescript": "^5.7.0",
+      },
+    },
     "services/requirement-deepagent-api": {
       "name": "@autix/requirement-deepagent-api",
       "version": "0.0.0",
@@ -258,6 +273,8 @@
     "@autix/deepagent-contracts": ["@autix/deepagent-contracts@workspace:packages/deepagent-contracts"],
 
     "@autix/deepagent-web": ["@autix/deepagent-web@workspace:clients/deepagent-web"],
+
+    "@autix/deepagents-in-action": ["@autix/deepagents-in-action@workspace:services/deepagents-in-action"],
 
     "@autix/llm-core": ["@autix/llm-core@workspace:packages/llm-core"],
 

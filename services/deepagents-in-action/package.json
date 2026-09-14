@@ -1,0 +1,24 @@
+{
+  "name": "@autix/deepagents-in-action",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "hello": "bun run ch02-quickstart/hello.ts",
+    "calculator": "bun run ch02-quickstart/calculator.ts",
+    "research": "bun run ch02-quickstart/research.ts",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@langchain/core": "^1.2.4",
+    "@langchain/openai": "1.5.5",
+    "deepagents": "1.10.2",
+    "dotenv": "^17.4.2",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0"
+  }
+}

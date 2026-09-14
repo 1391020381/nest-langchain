@@ -16,6 +16,8 @@
 
 ## 怎么学
 
+- Datawhale 第 2 章 TypeScript Hello World：见 [独立示例目录](services/deepagents-in-action/README.md)，根目录执行 `bun run demo:deepagent-hello`。
+
 1. 要系统理解原理与迁移过程，打开 [`docs/learning-path.md`](docs/learning-path.md)，继续按教材顺序学习。
 2. 要直接建设当前项目，打开 [DeepAgent-first 实践指南](docs/deepagent-first/README.md)，从全新目录开始逐步实现。
 3. 两条路线共享工程底座和基础设施，但学习进度与工程完成度分开记录。
