@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>人工审批 · Deep Agents</title><link rel="stylesheet" href="/style.css"></head>
+<body>
+<main>
+  <header><span class="eyebrow">DEEP AGENTS / CHAPTER 09</span><h1>让 Agent 工作，<br>由你决定关键一步。</h1><p>观察任务暂停、审查工具参数，再恢复执行。</p><span id="mode" class="badge">正在连接服务</span></header>
+  <section><h2>1. 发起任务</h2><p class="muted">邮件只写入模拟发件箱。演示模式使用固定草稿；真实模型模式根据你的任务生成内容。</p>
+    <div class="presets"><button type="button" data-prompt="起草一封 Agent 研究报告邮件，发送给 team@example.com。">邮件审批</button><button type="button" data-prompt="批量发送两封研究报告邮件，分别给 team@example.com 和 manager@example.com。">批量审批</button><button type="button" data-prompt="请先提问，确认我希望报告面向谁以及报告长度。">人工回答</button></div>
+    <form id="start"><label for="prompt">任务内容</label><textarea id="prompt" rows="3" maxlength="4000" required>起草一封 Agent 研究报告邮件，发送给 team@example.com。</textarea><button class="primary" id="start-button">开始新任务</button></form>
+  </section>
+  <div id="notice" role="alert"></div>
+  <section><div class="section-title"><h2>2. 人工审批</h2><span id="status" class="badge" aria-live="polite">尚未开始</span></div><p id="thread" class="muted"></p><div id="review"><p class="empty">任务运行到需要你决定的步骤时，会在这里暂停。</p></div></section>
+  <div class="columns"><section><h2>3. 执行反馈</h2><div id="messages" aria-live="polite"><p class="empty">等待任务开始</p></div></section><section><h2>模拟发件箱 <span id="count">0</span></h2><p class="muted">只有已获批准的发送操作才会出现在这里。</p><div id="outbox"></div></section></div>
+  <footer>状态保存在服务内存中。刷新页面可恢复当前会话；重启服务后需重新开始。</footer>
+</main><script type="module" src="/app.js"></script>
+</body></html>

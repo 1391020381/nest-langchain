@@ -1,2 +1,4 @@
 .env
 node_modules/
+.langgraph_api/
+ch06-async-subagents/.langgraph_api/

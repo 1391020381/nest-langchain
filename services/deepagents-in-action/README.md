@@ -1,4 +1,10 @@
-# 第 2 章：TypeScript Deep Agent 快速上手
+# Deep Agents 实战：TypeScript 示例
+
+第 9 章：[Human-in-the-Loop 后端 + Web 审批示例](ch09-human-in-the-loop/README.md)，运行 `bun run hitl:demo`，打开 `http://127.0.0.1:2029`；使用真实模型运行 `bun run hitl`。
+
+第 6 章：[本地单部署异步子 Agent 验证](ch06-async-subagents/README.md)，启动 `bun run async:server`，另开终端执行 `bun run async:demo`。
+
+第 4 章：[规划并执行研究任务](ch04-task-planning/README.md)，运行 `bun run planning`，实时查看计划和虚拟文件。
 
 对应 [Datawhale 第 2 章 Hello World](https://datawhalechina.github.io/deepagents-in-action/chapters/ch02-quickstart/)。使用项目已有的 Deep Agents JS 依赖，无需 Python、AgentSeek、数据库或 Web 服务。
 

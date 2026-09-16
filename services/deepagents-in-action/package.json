@@ -7,17 +7,27 @@
     "hello": "bun run ch02-quickstart/hello.ts",
     "calculator": "bun run ch02-quickstart/calculator.ts",
     "research": "bun run ch02-quickstart/research.ts",
-    "test": "bun test",
+    "planning": "bun run ch04-task-planning/research.ts",
+    "async:server": "langgraphjs dev --config ch06-async-subagents/langgraph.json --host 127.0.0.1 --port 2024 --n-jobs-per-worker 4 --no-browser",
+    "async:demo": "bun run ch06-async-subagents/run-demo.ts",
+    "async:protocol": "bun run ch06-async-subagents/run-demo.ts --protocol",
+    "hitl": "bun run ch09-human-in-the-loop/server.ts",
+    "hitl:demo": "bun run ch09-human-in-the-loop/server.ts --demo",
+    "test": "bun test --timeout 15000",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@langchain/core": "^1.2.4",
+    "@langchain/langgraph": "1.4.15",
+    "@langchain/langgraph-checkpoint": "1.1.5",
+    "@langchain/langgraph-sdk": "1.9.28",
     "@langchain/openai": "1.5.5",
     "deepagents": "1.10.2",
     "dotenv": "^17.4.2",
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@langchain/langgraph-cli": "1.4.6",
     "@types/node": "^22.0.0",
     "typescript": "^5.7.0"
   }
