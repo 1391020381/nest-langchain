@@ -132,6 +132,8 @@ AI 生成的示例经常跨越多个抽象层，因此会出现“API 突然冒�
 
 ### 第三阶段：用原生 LangGraph 重写一次人工介入
 
+配套可执行练习：[第三阶段：原生 LangGraph 人工介入](../services/deepagents-in-action/ch05-native-langgraph-hitl/README.md)。该练习不使用 `createDeepAgent()`，通过本地后端与浏览器审批页面分别演示批准、修改和拒绝；审批前不产生副作用，并用测试验证不同 `thread_id` 的 checkpoint 隔离。
+
 这是理解 DeepAgent 人工审批能力最关键的练习。暂时不用 DeepAgent，直接实现一个最小流程：
 
 ```text

@@ -10,6 +10,8 @@
     "research": "bun run ch02-quickstart/research.ts",
     "harness:observe": "bun run ch03-harness-observation/run.ts",
     "planning": "bun run ch04-task-planning/research.ts",
+    "hitl:native": "bun run ch05-native-langgraph-hitl/server.ts",
+    "hitl:native:cli": "bun run ch05-native-langgraph-hitl/demo.ts",
     "async:server": "langgraphjs dev --config ch06-async-subagents/langgraph.json --host 127.0.0.1 --port 2024 --n-jobs-per-worker 4 --no-browser",
     "async:demo": "bun run ch06-async-subagents/run-demo.ts",
     "async:protocol": "bun run ch06-async-subagents/run-demo.ts --protocol",

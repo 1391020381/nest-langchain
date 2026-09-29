@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>原生 LangGraph 人工审批</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<main>
+  <header>
+    <span class="eyebrow">STAGE 03 / NATIVE LANGGRAPH</span>
+    <h1>流程先暂停，<br>关键操作由你决定。</h1>
+    <p>不使用 DeepAgent：直接观察 StateGraph、interrupt、checkpoint 与 resume。</p>
+  </header>
+
+  <section>
+    <h2>1. 发起操作请求</h2>
+    <p class="muted">系统会生成一封模拟邮件建议。邮件不会真实发送。</p>
+    <form id="start">
+      <label for="request">用户请求</label>
+      <textarea id="request" rows="3" maxlength="4000" required>向团队发送一封本周发布计划通知</textarea>
+      <button class="primary" id="start-button">生成建议并暂停审批</button>
+    </form>
+  </section>
+
+  <div id="notice" role="alert"></div>
+
+  <section>
+    <div class="section-title">
+      <h2>2. 人工审批</h2>
+      <span id="status" class="badge">尚未开始</span>
+    </div>
+    <p id="thread" class="muted"></p>
+    <div id="review"><p class="empty">待审批操作会显示在这里。</p></div>
+  </section>
+
+  <div class="columns">
+    <section>
+      <h2>3. State 与审计记录</h2>
+      <div id="result"><p class="empty">等待流程开始</p></div>
+      <ol id="audit"></ol>
+    </section>
+    <section>
+      <h2>模拟发件箱 <span id="count">0</span></h2>
+      <p class="muted">只有批准或修改后批准的操作才会执行。</p>
+      <div id="outbox"><p class="empty">暂无邮件</p></div>
+    </section>
+  </div>
+
+  <footer>状态保存在服务进程的 MemorySaver 中；刷新可恢复，重启服务后消失。</footer>
+</main>
+<script type="module" src="/app.js"></script>
+</body>
+</html>
+

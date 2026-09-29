@@ -7,6 +7,8 @@
     "demo:langchain-foundations": "bun run services/deepagents-in-action/ch01-langchain-foundations/manual-agent-loop.ts",
     "demo:deepagent-hello": "bun run services/deepagents-in-action/ch02-quickstart/hello.ts",
     "demo:deepagent-harness": "bun run services/deepagents-in-action/ch03-harness-observation/run.ts",
+    "demo:langgraph-hitl": "bun run services/deepagents-in-action/ch05-native-langgraph-hitl/server.ts",
+    "demo:langgraph-hitl:cli": "bun run services/deepagents-in-action/ch05-native-langgraph-hitl/demo.ts",
     "clean:ports": "for port in 3000 3001 3002 4001; do lsof -ti :$port | xargs kill -9 2>/dev/null; done; echo 'Ports cleaned'",
     "dev": "bun run dev:deepagent",
     "dev:deepagent": "bun scripts/dev-deepagent.ts",
