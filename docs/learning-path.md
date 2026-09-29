@@ -20,6 +20,202 @@
 
 当前工程针对锁定依赖采用 `streamEvents` v2 raw-event 适配；这是失败路径稳定性上的工程兼容决策，不改变教材对 DeepAgent/LangGraph 原理和其他事件 API 的讲解。具体原因与回归测试见 DeepAgent-first 指南。
 
+## DeepAgent-first 的学习心智模型
+
+已经能借助 AI 使用 DeepAgent 实现基础功能，甚至完成人工介入，并不代表需要立即从头通读 DeepAgent、LangChain 和 LangGraph 三套文档。更有效的方式是：
+
+> 继续使用 DeepAgent 建设实际功能，同时补齐 LangChain 基础；遇到状态持久化、人工介入、暂停恢复和自定义流程时，再定向学习 LangGraph。
+
+三者不是互相替代的平行框架，而是不同抽象层级：
+
+```mermaid
+flowchart TB
+    APP["NestJS 应用"] --> DA["DeepAgent<br/>已组装的 Agent Harness"]
+
+    DA --> LC["LangChain<br/>模型、消息、Tool、Middleware"]
+    DA --> LG["LangGraph<br/>状态、流程、持久化、暂停与恢复"]
+
+    LC --> MODEL["Model / Messages"]
+    LC --> TOOL["Tool + Zod Schema"]
+    LC --> MW["Middleware"]
+
+    LG --> STATE["State / Thread"]
+    LG --> CP["Checkpointer"]
+    LG --> INT["interrupt / Command / resume"]
+
+    DA -.观测.-> LS["LangSmith<br/>Trace、调试、评估、部署"]
+```
+
+DeepAgent 是已经组装好的 Agent Harness；LangChain 提供模型、消息、工具和中间件等基础组件；LangGraph 提供有状态、可持久化、可暂停恢复的运行能力；LangSmith 负责 Trace、调试、评估和托管等工程能力。
+
+### 陌生 API 的来源地图
+
+AI 生成的示例经常跨越多个抽象层，因此会出现“API 突然冒出来”的感觉。先根据 import 判断 API 属于哪一层，再阅读对应层的文档。
+
+| Import 来源 | 主要职责 |
+| --- | --- |
+| `deepagents` | 规划、文件系统、子 Agent、记忆等已经组装好的能力 |
+| `langchain` | `tool()`、`createAgent()`、Middleware 等常用 Agent API |
+| `@langchain/core` | Message、模型接口、Runnable 等基础抽象 |
+| `@langchain/langgraph` | `StateGraph`、`Command`、`interrupt()`、持久化和恢复 |
+| `@langchain/openai` 等 Provider 包 | 不同模型厂商的具体实现 |
+| LangSmith | Trace、调试、评估和托管，不承载主要业务逻辑 |
+
+遇到陌生 API 时，不应仅根据名称猜测。至少确认以下问题：
+
+1. 这个 API 来自哪个 npm 包？
+2. 它适用于哪个具体版本？
+3. 它属于 DeepAgent、LangChain 还是 LangGraph？
+4. 它的输入、返回值和生命周期是什么？
+5. 是否存在对应版本的官方 TypeScript 文档？
+
+让 AI 解释代码时，可以直接使用下面的约束：
+
+```text
+请为每个陌生 API 标注：
+1. npm 包与完整 import；
+2. 适用版本；
+3. 所属层级（DeepAgent、LangChain 或 LangGraph）；
+4. 输入、返回值及其在 Agent 生命周期中的作用；
+5. 对应的官方 TypeScript 文档链接。
+如果无法确认当前版本存在，请明确说明，不要根据旧版本或 Python API 猜测。
+```
+
+尤其注意不要混用 Python 与 TypeScript API、旧版与新版 LangChain API、LangGraph 原生 API 与 DeepAgent 包装 API。
+
+## DeepAgent-first 补课路线
+
+### 第一阶段：补齐 LangChain 的四个基础概念
+
+配套可执行练习：[第一阶段：LangChain 四个基础概念](../services/deepagents-in-action/ch01-langchain-foundations/README.md)。该练习不使用 `createAgent()` 或 `createDeepAgent()`，通过手写 Tool Calling 循环展示每条 Message 的产生者、Model 和 Tool 的输入输出、循环停止条件，并提供逐题回答模板与离线测试。
+
+暂时不用扩展到 RAG、向量数据库和大量第三方集成，只学习：
+
+1. **Message**：`HumanMessage`、`AIMessage`、`ToolMessage` 分别由谁产生。
+2. **Model**：模型接收什么输入，返回什么结构。
+3. **Tool**：工具名称、描述、Zod 参数和执行结果。
+4. **Agent loop**：模型选择 Tool，系统执行 Tool，再将结果交回模型继续推理。
+
+建议脱离 DeepAgent，手写一个最小 Agent：
+
+```text
+用户问题
+  → 模型判断是否调用 Tool
+  → Tool 查询数据
+  → ToolMessage 返回结果
+  → 模型生成最终答案
+```
+
+完成标准：看到一次 Agent 执行记录时，能够解释每条 Message 是谁产生的，以及 Tool 为什么被调用。
+
+### 第二阶段：回到 DeepAgent，识别自动组装的能力
+
+配套可执行练习：[第二阶段：观察 DeepAgent Harness](../services/deepagents-in-action/ch03-harness-observation/README.md)。它使用与第一阶段相同的业务 Tool，但把手写循环替换为 `createDeepAgent()`，并逐步打印 Message、Tool Call、Todo 和虚拟文件状态；讲义给出了五个观察问题的回答标准及 LangSmith Trace 核验方法。
+
+重点观察 `createDeepAgent()` 自动添加或管理的内容：
+
+- 默认提示词与规划能力
+- Todo 和文件系统工具
+- Context summarization
+- Subagent
+- Backend
+- Memory
+- Human-in-the-loop Middleware
+
+每增加一项配置，都通过 LangSmith Trace 回答：
+
+1. 模型收到了哪些消息？
+2. 当前暴露了哪些工具？
+3. 工具参数由谁生成？
+4. Tool 执行后返回了什么？
+5. Agent 为什么继续循环、暂停或停止？
+
+### 第三阶段：用原生 LangGraph 重写一次人工介入
+
+这是理解 DeepAgent 人工审批能力最关键的练习。暂时不用 DeepAgent，直接实现一个最小流程：
+
+```text
+生成操作建议
+  → interrupt() 暂停
+  → 人工批准、修改或拒绝
+  → Command({ resume: ... })
+  → 继续执行
+```
+
+只需要集中学习以下概念：
+
+- State 与 Node
+- `Command`
+- Checkpointer
+- `thread_id`
+- `interrupt()`
+- `Command({ resume })`
+
+人工介入能够跨请求、跨进程或隔一段时间后恢复，依赖的是一整套协作机制：
+
+```text
+interrupt
+  → Checkpointer 保存 State
+  → thread_id 标识本次执行
+  → Command({ resume }) 提交人工决定
+  → 从暂停位置继续
+```
+
+因此，理解人工介入时不要只研究 `interrupt()` 的函数签名，还要同时理解状态保存、线程标识和恢复协议。
+
+### 第四阶段：接入 NestJS 的工程边界
+
+理解底层运行机制后，再把 Agent 放回应用架构：
+
+```text
+Controller
+├── POST /agents/:id/runs       开始运行
+├── GET  /threads/:id           查询状态
+└── POST /threads/:id/resume    提交人工审批
+
+Service
+├── 创建或调用 Agent
+├── 保存 thread_id
+├── 处理 interrupt
+└── 恢复执行
+
+Infrastructure
+├── 持久化 Checkpointer
+├── Streaming
+└── LangSmith Trace
+```
+
+工程化阶段重点回答：
+
+- `thread_id` 如何与用户、业务实体和会话关联？
+- 服务重启后是否仍能恢复？
+- 重复审批或重试是否会造成副作用重复执行？
+- 哪些 Tool 必须人工批准？
+- `interrupt()` 前后的代码在恢复时是否会重新执行？
+- 并发请求如何避免重复恢复同一个线程？
+
+### 推荐的实际推进顺序
+
+```text
+现有 DeepAgent 项目
+  → 补 LangChain：Message + Model + Tool + Agent loop
+  → 将一个人工介入功能用原生 LangGraph 重写
+  → 理解 Checkpointer + thread_id + interrupt/resume
+  → 回到 DeepAgent 继续完成实际项目
+```
+
+判断是否真正理解这套技术栈，不取决于记住了多少 API，而取决于能否回答：
+
+> 当前状态保存在哪里？下一步由谁决定？为什么能够暂停？恢复时凭什么找到原来的执行？
+
+能回答这四个问题，就已经建立了贯穿 DeepAgent、LangChain 与 LangGraph 的核心心智模型。
+
+进一步阅读：
+
+- [Deep Agents overview（TypeScript）](https://docs.langchain.com/oss/javascript/deepagents/overview)
+- [Thinking in LangGraph（TypeScript）](https://docs.langchain.com/oss/javascript/langgraph/thinking-in-langgraph)
+- [LangChain Build overview](https://docs.langchain.com/build-overview#typescript)
+
 ## 当前学习进度
 
 - [x] 序章：站在范式之变的十字路口

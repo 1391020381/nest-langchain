@@ -8,5 +8,5 @@
     "noEmit": true,
     "types": ["node"]
   },
-  "include": ["ch02-quickstart/**/*.ts", "ch04-task-planning/**/*.ts", "ch06-async-subagents/**/*.ts", "ch09-human-in-the-loop/**/*.ts"]
+  "include": ["ch01-langchain-foundations/**/*.ts", "ch02-quickstart/**/*.ts", "ch03-harness-observation/**/*.ts", "ch04-task-planning/**/*.ts", "ch06-async-subagents/**/*.ts", "ch09-human-in-the-loop/**/*.ts"]
 }

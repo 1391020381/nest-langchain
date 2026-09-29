@@ -4,9 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "foundations": "bun run ch01-langchain-foundations/manual-agent-loop.ts",
     "hello": "bun run ch02-quickstart/hello.ts",
     "calculator": "bun run ch02-quickstart/calculator.ts",
     "research": "bun run ch02-quickstart/research.ts",
+    "harness:observe": "bun run ch03-harness-observation/run.ts",
     "planning": "bun run ch04-task-planning/research.ts",
     "async:server": "langgraphjs dev --config ch06-async-subagents/langgraph.json --host 127.0.0.1 --port 2024 --n-jobs-per-worker 4 --no-browser",
     "async:demo": "bun run ch06-async-subagents/run-demo.ts",

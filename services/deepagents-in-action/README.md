@@ -1,5 +1,9 @@
 # Deep Agents 实战：TypeScript 示例
 
+第一阶段：[LangChain 四个基础概念](ch01-langchain-foundations/README.md)，运行 `bun run foundations`，手写并观察 Message、Model、Tool 与 Agent loop。
+
+第二阶段：[观察 DeepAgent Harness](ch03-harness-observation/README.md)，运行 `bun run harness:observe`，对照观察 Message、Tool、Todo 和虚拟文件状态。
+
 第 9 章：[Human-in-the-Loop 后端 + Web 审批示例](ch09-human-in-the-loop/README.md)，运行 `bun run hitl:demo`，打开 `http://127.0.0.1:2029`；使用真实模型运行 `bun run hitl`。
 
 第 6 章：[本地单部署异步子 Agent 验证](ch06-async-subagents/README.md)，启动 `bun run async:server`，另开终端执行 `bun run async:demo`。
