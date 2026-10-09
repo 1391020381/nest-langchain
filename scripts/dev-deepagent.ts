@@ -1,8 +1,9 @@
+import { spawn } from "node:child_process";
 import { join } from "node:path";
 
 type Target = "api" | "web";
 
-const repositoryRoot = join(import.meta.dir, "..");
+const repositoryRoot = join(__dirname, "..");
 const requestedTarget = process.argv[2];
 
 if (
@@ -43,8 +44,7 @@ const selectedTargets = requestedTarget
 
 const children = selectedTargets.map((target) => ({
   name: target.name,
-  process: Bun.spawn({
-    cmd: target.command,
+  process: spawn(target.command[0]!, target.command.slice(1), {
     cwd: target.cwd,
     // Codex/IDE hosts may inject a generic PORT for their own process. Do not
     // let it override services/deepagent-api/.env; the API owns its port.
@@ -54,34 +54,47 @@ const children = selectedTargets.map((target) => ({
             Object.entries(process.env).filter(([name]) => name !== "PORT"),
           )
         : process.env,
-    stdin: "inherit",
-    stdout: "inherit",
-    stderr: "inherit",
+    stdio: "inherit",
   }),
 }));
 
 let shuttingDown = false;
+let requestedExitCode = 0;
 
-async function shutdown(exitCode: number): Promise<never> {
-  if (!shuttingDown) {
-    shuttingDown = true;
-    for (const child of children) {
-      if (child.process.exitCode === null) child.process.kill();
-    }
-    await Promise.all(children.map((child) => child.process.exited));
-  }
-  process.exit(exitCode);
+function allChildrenExited(): boolean {
+  return children.every(
+    (child) =>
+      child.process.exitCode !== null || child.process.signalCode !== null
+  );
 }
 
-process.on("SIGINT", () => void shutdown(130));
-process.on("SIGTERM", () => void shutdown(143));
+function shutdown(exitCode: number): void {
+  if (shuttingDown) return;
+  shuttingDown = true;
+  requestedExitCode = exitCode;
+
+  for (const child of children) {
+    if (child.process.exitCode === null && child.process.signalCode === null) {
+      child.process.kill();
+    }
+  }
+
+  const forceExit = setTimeout(() => process.exit(requestedExitCode), 2_000);
+  forceExit.unref();
+}
+
+process.on("SIGINT", () => shutdown(130));
+process.on("SIGTERM", () => shutdown(143));
 
 for (const child of children) {
-  void child.process.exited.then((exitCode) => {
-    if (shuttingDown) return;
-    console.error(`${child.name} 开发服务已退出（exit ${exitCode}）`);
-    void shutdown(exitCode || 1);
+  child.process.on("exit", (exitCode, signal) => {
+    if (shuttingDown) {
+      if (allChildrenExited()) process.exit(requestedExitCode);
+      return;
+    }
+
+    const reason = exitCode === null ? signal : `exit ${exitCode}`;
+    console.error(`${child.name} 开发服务已退出（${reason}）`);
+    shutdown(exitCode || 1);
   });
 }
-
-await new Promise(() => undefined);

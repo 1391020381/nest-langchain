@@ -3,6 +3,7 @@
 本文只记录《AI Agents 开发实践》的**教材渐进路线**。教材继续从 LangChain、LangGraph 与向量/RAG 的底层能力出发，最后在第十四、十五章进入 DeepAgent 与迁移实践。
 
 - **课本**：[`docs/AI Agents 开发实践/`](./AI%20Agents%20开发实践/)
+- **可执行学习 Path**：[`AIAgents开发实践.md`](./AIAgents开发实践.md)（实践产物、章后问题与通过标准）
 - **工程**：按章从零在本仓库生成（Bun monorepo：`clients/` / `services/` / `packages/`）
 - **对照参考**（只读）：[Cookieboty/autix-demo](https://github.com/Cookieboty/autix-demo) 各章 `feat/*` 分支
 - **旧 Nest 练习文档**：已移至 [`docs/archive/`](./archive/)，不再作为主线

@@ -2,9 +2,15 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import type { RequirementResult } from "@autix/contracts";
+import {
+  RequirementSchema,
+  RequirementResultSchema,
+  type RequirementResult,
+} from "@autix/contracts";
 
 const DEFAULT_INPUT = "用户注册时必须绑定手机号，密码至少8位";
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001";
 
 export default function Home() {
   const [input, setInput] = useState(DEFAULT_INPUT);
@@ -16,19 +22,20 @@ export default function Home() {
     setLoading(true);
     setError("");
     try {
+      const request = RequirementSchema.parse({ input });
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/requirement/extract`,
+        `${API_BASE_URL}/requirement/extract`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ input }),
+          body: JSON.stringify(request),
         }
       );
       if (!res.ok) {
         const body = await res.text();
         throw new Error(body || `HTTP ${res.status}`);
       }
-      const data = (await res.json()) as RequirementResult;
+      const data = RequirementResultSchema.parse(await res.json());
       setResult(data);
     } catch (e) {
       setResult(null);

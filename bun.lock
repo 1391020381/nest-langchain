@@ -5,6 +5,7 @@
     "": {
       "name": "root",
       "devDependencies": {
+        "@types/node": "^22.0.0",
         "turbo": "^2.8.20",
         "wait-on": "^9.0.5",
       },

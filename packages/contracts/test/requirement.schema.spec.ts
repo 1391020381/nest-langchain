@@ -1,18 +1,29 @@
 import { describe, expect, test } from "bun:test";
-import { RequirementResultSchema, RequirementSchema } from "../src/index";
+import {
+  RequirementResultSchema,
+  RequirementSchema,
+} from "../src/index";
 
-describe("Requirement schemas", () => {
-  test("rejects empty input", () => {
-    const parsed = RequirementSchema.safeParse({ input: "" });
-    expect(parsed.success).toBe(false);
+describe("requirement contracts", () => {
+  test("normalizes a valid request", () => {
+    expect(RequirementSchema.parse({ input: "  创建订单  " })).toEqual({
+      input: "创建订单",
+    });
   });
 
-  test("accepts valid result shape", () => {
-    const parsed = RequirementResultSchema.safeParse({
-      action: "用户注册",
-      constraints: ["必须绑定手机号"],
-      entities: ["用户", "手机号"],
-    });
-    expect(parsed.success).toBe(true);
+  test("rejects empty, oversized, and unexpected request fields", () => {
+    expect(RequirementSchema.safeParse({ input: "   " }).success).toBe(false);
+    expect(RequirementSchema.safeParse({ input: "x".repeat(4001) }).success).toBe(
+      false
+    );
+    expect(
+      RequirementSchema.safeParse({ input: "创建订单", admin: true }).success
+    ).toBe(false);
+  });
+
+  test("rejects incomplete model output", () => {
+    expect(
+      RequirementResultSchema.safeParse({ action: "创建订单" }).success
+    ).toBe(false);
   });
 });

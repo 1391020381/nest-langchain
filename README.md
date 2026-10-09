@@ -10,6 +10,7 @@
 | --- | --- | --- |
 | 课本 | [`docs/AI Agents 开发实践/`](docs/AI%20Agents%20开发实践/) | 序章 → 第二十章 + 终章 + 面试篇 |
 | 学习进度 | [`docs/learning-path.md`](docs/learning-path.md) | 章节勾选、官方对照分支、当前下一步 |
+| 可执行学习 Path | [`docs/AIAgents开发实践.md`](docs/AIAgents开发实践.md) | 分阶段实践、章后问答与通过标准 |
 | DeepAgent-first 指南 | [`docs/deepagent-first/`](docs/deepagent-first/) | 在全新目录中直接实现需求分析 Agent |
 | 教材配套工程 | `services/chat`、`clients/chat-web` | 保留原有按章演进代码，不作为新工程的实现目录 |
 | DeepAgent-first 工程 | `services/deepagent-api`、`clients/deepagent-web`、`packages/deepagent-contracts` | 与旧工程隔离的新 API、Web 与共享协议 |

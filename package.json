@@ -21,6 +21,10 @@
     "dev:api": "turbo run dev --filter=@autix/api",
     "dev:web": "turbo run dev --filter=@autix/web",
     "dev:langchain": "bun run clean:ports && turbo run dev --parallel --filter=@autix/api --filter=@autix/web",
+    "dev:stage-a": "bun scripts/dev-stage-a.ts",
+    "build:stage-a": "turbo run build --filter=@autix/api --filter=@autix/web",
+    "typecheck:stage-a": "bunx tsc -p scripts/tsconfig.json && bunx tsc -p packages/contracts/tsconfig.json --noEmit --incremental false && bunx tsc -p packages/llm-core/tsconfig.json --noEmit --incremental false && bunx tsc -p services/api/tsconfig.json --noEmit --incremental false && bunx tsc -p clients/web/tsconfig.json --noEmit --incremental false",
+    "test:stage-a": "bun test --cwd packages/contracts test/requirement.schema.spec.ts && bun test --cwd services/api test/requirement.spec.ts test/requirement.prompt.spec.ts test/model.factory.spec.ts",
     "build:deepagent": "turbo run build --filter=@autix/deepagent-api --filter=@autix/deepagent-web",
     "typecheck:deepagent": "turbo run typecheck --filter=@autix/deepagent-api --filter=@autix/deepagent-web",
     "test:deepagent": "turbo run test --filter=@autix/deepagent-api --filter=@autix/deepagent-web",
@@ -32,6 +36,7 @@
     "lint": "turbo run lint"
   },
   "devDependencies": {
+    "@types/node": "^22.0.0",
     "turbo": "^2.8.20",
     "wait-on": "^9.0.5"
   },

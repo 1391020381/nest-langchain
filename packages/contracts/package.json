@@ -16,6 +16,7 @@
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "tsc -p tsconfig.json --noEmit",
+    "test": "bun test",
     "dev": "tsc -p tsconfig.json --watch"
   },
   "dependencies": {
