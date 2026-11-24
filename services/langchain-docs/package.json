@@ -1,0 +1,23 @@
+{
+  "name": "@autix/langchain-docs",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "list": "bun src/index.ts",
+    "quickstart": "bun src/quickstart/basic-agent.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@langchain/core": "^1.1.0",
+    "@langchain/openai": "^1.2.0",
+    "dotenv": "^17.2.3",
+    "langchain": "^1.2.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0"
+  }
+}
