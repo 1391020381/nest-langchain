@@ -12,6 +12,10 @@
     "quickstart:memory": "bun src/quickstart/memory.ts",
     "quickstart:research-agent": "bun src/quickstart/research-agent.ts",
     "agents:system-prompt": "bun src/agents/system-prompt.ts",
+    "agents:structured-output": "bun src/agents/structured-output.ts",
+    "agents:agent-state": "bun src/agents/agent-state.ts",
+    "agents:invocation": "bun src/agents/invocation.ts",
+    "agents:streaming": "bun src/agents/streaming.ts",
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit"
   },

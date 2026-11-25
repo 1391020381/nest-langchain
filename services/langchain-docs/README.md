@@ -14,6 +14,10 @@ bun run --filter @autix/langchain-docs quickstart:model
 bun run --filter @autix/langchain-docs quickstart:memory
 bun run --filter @autix/langchain-docs quickstart:research-agent
 bun run --filter @autix/langchain-docs agents:system-prompt
+bun run --filter @autix/langchain-docs agents:structured-output
+bun run --filter @autix/langchain-docs agents:agent-state
+bun run --filter @autix/langchain-docs agents:invocation
+bun run --filter @autix/langchain-docs agents:streaming
 ```
 
 `OPENAI_BASE_URL` 有值且模型是 OpenAI（无前缀或 `openai:`）时，会用 `ChatOpenAI` 走该地址。其它厂商继续使用官网的模型字符串。

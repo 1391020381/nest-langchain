@@ -34,6 +34,26 @@ const examples = [
     file: "src/agents/system-prompt.ts",
     doc: "https://docs.langchain.com/oss/javascript/langchain/agents",
   },
+  {
+    script: "bun run agents:structured-output",
+    file: "src/agents/structured-output.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/agents",
+  },
+  {
+    script: "bun run agents:agent-state",
+    file: "src/agents/agent-state.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/agents",
+  },
+  {
+    script: "bun run agents:invocation",
+    file: "src/agents/invocation.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/agents",
+  },
+  {
+    script: "bun run agents:streaming",
+    file: "src/agents/streaming.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/agents",
+  },
 ];
 
 console.log("LangChain 官网示例\n");
