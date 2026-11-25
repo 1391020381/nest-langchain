@@ -6,12 +6,20 @@
   "scripts": {
     "list": "bun src/index.ts",
     "quickstart": "bun src/quickstart/basic-agent.ts",
+    "quickstart:system-prompt": "bun src/quickstart/system-prompt.ts",
+    "quickstart:fetch-text-from-url": "bun src/quickstart/fetch-text-from-url.ts",
+    "quickstart:model": "bun src/quickstart/model.ts",
+    "quickstart:memory": "bun src/quickstart/memory.ts",
+    "quickstart:research-agent": "bun src/quickstart/research-agent.ts",
+    "agents:system-prompt": "bun src/agents/system-prompt.ts",
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit"
   },
   "dependencies": {
     "@langchain/core": "^1.1.0",
+    "@langchain/langgraph": "^1.7.5",
     "@langchain/openai": "^1.2.0",
+    "deepagents": "^1.17.0",
     "dotenv": "^17.2.3",
     "langchain": "^1.2.0",
     "zod": "^3.25.76"
