@@ -104,6 +104,51 @@ const examples = [
     file: "src/messages/serialization.ts",
     doc: "https://docs.langchain.com/oss/javascript/langchain/messages",
   },
+  {
+    script: "bun run tools:return-string",
+    file: "src/tools/return-string.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/tools",
+  },
+  {
+    script: "bun run tools:return-object",
+    file: "src/tools/return-object.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/tools",
+  },
+  {
+    script: "bun run tools:return-multimodal",
+    file: "src/tools/return-multimodal.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/tools",
+  },
+  {
+    script: "bun run tools:return-command",
+    file: "src/tools/return-command.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/tools",
+  },
+  {
+    script: "bun run tools:return-direct",
+    file: "src/tools/return-direct.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/tools",
+  },
+  {
+    script: "bun run tools:context",
+    file: "src/tools/context.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/tools",
+  },
+  {
+    script: "bun run tools:store",
+    file: "src/tools/store.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/tools",
+  },
+  {
+    script: "bun run tools:errors",
+    file: "src/tools/errors.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/tools",
+  },
+  {
+    script: "bun run tools:dynamic",
+    file: "src/tools/dynamic.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/tools",
+  },
 ];
 
 console.log("LangChain 官网示例\n");
