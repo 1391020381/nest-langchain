@@ -11,6 +11,7 @@ export type DocsChatModelFields = {
   maxTokens?: number;
   timeout?: number;
   maxRetries?: number;
+  outputVersion?: "v0" | "v1";
 };
 
 export function docsModelName(): string {

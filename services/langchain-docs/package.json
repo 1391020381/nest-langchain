@@ -21,6 +21,11 @@
     "models:tool-calling": "bun src/models/tool-calling.ts",
     "models:structured-output": "bun src/models/structured-output.ts",
     "models:advanced": "bun src/models/advanced.ts",
+    "messages:basic": "bun src/messages/basic.ts",
+    "messages:types": "bun src/messages/types.ts",
+    "messages:content": "bun src/messages/content.ts",
+    "messages:notifications": "bun src/messages/notifications.ts",
+    "messages:serialization": "bun src/messages/serialization.ts",
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit"
   },

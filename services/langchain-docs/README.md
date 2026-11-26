@@ -23,6 +23,11 @@ bun run --filter @autix/langchain-docs models:invocation
 bun run --filter @autix/langchain-docs models:tool-calling
 bun run --filter @autix/langchain-docs models:structured-output
 bun run --filter @autix/langchain-docs models:advanced
+bun run --filter @autix/langchain-docs messages:basic
+bun run --filter @autix/langchain-docs messages:types
+bun run --filter @autix/langchain-docs messages:content
+bun run --filter @autix/langchain-docs messages:notifications
+bun run --filter @autix/langchain-docs messages:serialization
 ```
 
 `OPENAI_BASE_URL` 有值且模型是 OpenAI（无前缀或 `openai:`）时，会用 `ChatOpenAI` 走该地址。其它厂商继续使用官网的模型字符串。

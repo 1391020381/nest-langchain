@@ -79,6 +79,31 @@ const examples = [
     file: "src/models/advanced.ts",
     doc: "https://docs.langchain.com/oss/javascript/langchain/models",
   },
+  {
+    script: "bun run messages:basic",
+    file: "src/messages/basic.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/messages",
+  },
+  {
+    script: "bun run messages:types",
+    file: "src/messages/types.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/messages",
+  },
+  {
+    script: "bun run messages:content",
+    file: "src/messages/content.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/messages",
+  },
+  {
+    script: "bun run messages:notifications",
+    file: "src/messages/notifications.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/messages",
+  },
+  {
+    script: "bun run messages:serialization",
+    file: "src/messages/serialization.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/messages",
+  },
 ];
 
 console.log("LangChain 官网示例\n");
