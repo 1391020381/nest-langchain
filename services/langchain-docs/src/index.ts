@@ -54,6 +54,31 @@ const examples = [
     file: "src/agents/streaming.ts",
     doc: "https://docs.langchain.com/oss/javascript/langchain/agents",
   },
+  {
+    script: "bun run models:init",
+    file: "src/models/init.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/models",
+  },
+  {
+    script: "bun run models:invocation",
+    file: "src/models/invocation.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/models",
+  },
+  {
+    script: "bun run models:tool-calling",
+    file: "src/models/tool-calling.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/models",
+  },
+  {
+    script: "bun run models:structured-output",
+    file: "src/models/structured-output.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/models",
+  },
+  {
+    script: "bun run models:advanced",
+    file: "src/models/advanced.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/models",
+  },
 ];
 
 console.log("LangChain 官网示例\n");

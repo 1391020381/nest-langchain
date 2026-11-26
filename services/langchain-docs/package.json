@@ -16,6 +16,11 @@
     "agents:agent-state": "bun src/agents/agent-state.ts",
     "agents:invocation": "bun src/agents/invocation.ts",
     "agents:streaming": "bun src/agents/streaming.ts",
+    "models:init": "bun src/models/init.ts",
+    "models:invocation": "bun src/models/invocation.ts",
+    "models:tool-calling": "bun src/models/tool-calling.ts",
+    "models:structured-output": "bun src/models/structured-output.ts",
+    "models:advanced": "bun src/models/advanced.ts",
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit"
   },
