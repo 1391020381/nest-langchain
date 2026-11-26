@@ -35,6 +35,9 @@
     "tools:store": "bun src/tools/store.ts",
     "tools:errors": "bun src/tools/errors.ts",
     "tools:dynamic": "bun src/tools/dynamic.ts",
+    "memory:checkpointer": "bun src/short-term-memory/checkpointer.ts",
+    "memory:thread": "bun src/short-term-memory/thread.ts",
+    "memory:trim": "bun src/short-term-memory/trim.ts",
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit"
   },

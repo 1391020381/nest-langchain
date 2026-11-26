@@ -149,6 +149,21 @@ const examples = [
     file: "src/tools/dynamic.ts",
     doc: "https://docs.langchain.com/oss/javascript/langchain/tools",
   },
+  {
+    script: "bun run memory:checkpointer",
+    file: "src/short-term-memory/checkpointer.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/short-term-memory",
+  },
+  {
+    script: "bun run memory:thread",
+    file: "src/short-term-memory/thread.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/short-term-memory",
+  },
+  {
+    script: "bun run memory:trim",
+    file: "src/short-term-memory/trim.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/short-term-memory",
+  },
 ];
 
 console.log("LangChain 官网示例\n");
