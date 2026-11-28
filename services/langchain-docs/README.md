@@ -40,6 +40,19 @@ bun run --filter @autix/langchain-docs tools:dynamic
 bun run --filter @autix/langchain-docs memory:checkpointer
 bun run --filter @autix/langchain-docs memory:thread
 bun run --filter @autix/langchain-docs memory:trim
+bun run --filter @autix/langchain-docs streaming:progress
+bun run --filter @autix/langchain-docs streaming:tokens
+bun run --filter @autix/langchain-docs streaming:custom
+bun run --filter @autix/langchain-docs streaming:modes
+bun run --filter @autix/langchain-docs streaming:reasoning
+bun run --filter @autix/langchain-docs streaming:disable
+bun run --filter @autix/langchain-docs events:messages
+bun run --filter @autix/langchain-docs events:reasoning
+bun run --filter @autix/langchain-docs events:tool-calls
+bun run --filter @autix/langchain-docs events:subagents
+bun run --filter @autix/langchain-docs events:state
+bun run --filter @autix/langchain-docs events:projections
+bun run --filter @autix/langchain-docs events:extensions
 ```
 
 `OPENAI_BASE_URL` 有值且模型是 OpenAI（无前缀或 `openai:`）时，会用 `ChatOpenAI` 走该地址。其它厂商继续使用官网的模型字符串。
@@ -57,6 +70,7 @@ bun run --filter @autix/langchain-docs memory:trim
 | `src/tools` | [Tools](https://docs.langchain.com/oss/javascript/langchain/tools) |
 | `src/short-term-memory` | [Short-term memory](https://docs.langchain.com/oss/javascript/langchain/short-term-memory) |
 | `src/streaming` | [Streaming](https://docs.langchain.com/oss/javascript/langchain/streaming) |
+| `src/event-streaming` | [Event streaming](https://docs.langchain.com/oss/javascript/langchain/event-streaming) |
 | `src/structured-output` | [Structured output](https://docs.langchain.com/oss/javascript/langchain/structured-output) |
 | `src/middleware` | [Middleware](https://docs.langchain.com/oss/javascript/langchain/middleware/overview) |
 | `src/guardrails` | [Guardrails](https://docs.langchain.com/oss/javascript/langchain/guardrails) |

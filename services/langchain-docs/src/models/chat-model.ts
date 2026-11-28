@@ -12,6 +12,8 @@ export type DocsChatModelFields = {
   timeout?: number;
   maxRetries?: number;
   outputVersion?: "v0" | "v1";
+  disableStreaming?: boolean;
+  streaming?: boolean;
 };
 
 export function docsModelName(): string {

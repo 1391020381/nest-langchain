@@ -164,6 +164,71 @@ const examples = [
     file: "src/short-term-memory/trim.ts",
     doc: "https://docs.langchain.com/oss/javascript/langchain/short-term-memory",
   },
+  {
+    script: "bun run streaming:progress",
+    file: "src/streaming/progress.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/streaming",
+  },
+  {
+    script: "bun run streaming:tokens",
+    file: "src/streaming/tokens.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/streaming",
+  },
+  {
+    script: "bun run streaming:custom",
+    file: "src/streaming/custom.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/streaming",
+  },
+  {
+    script: "bun run streaming:modes",
+    file: "src/streaming/modes.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/streaming",
+  },
+  {
+    script: "bun run streaming:reasoning",
+    file: "src/streaming/reasoning.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/streaming",
+  },
+  {
+    script: "bun run streaming:disable",
+    file: "src/streaming/disable.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/streaming",
+  },
+  {
+    script: "bun run events:messages",
+    file: "src/event-streaming/messages.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/event-streaming",
+  },
+  {
+    script: "bun run events:reasoning",
+    file: "src/event-streaming/reasoning.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/event-streaming",
+  },
+  {
+    script: "bun run events:tool-calls",
+    file: "src/event-streaming/tool-calls.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/event-streaming",
+  },
+  {
+    script: "bun run events:subagents",
+    file: "src/event-streaming/subagents.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/event-streaming",
+  },
+  {
+    script: "bun run events:state",
+    file: "src/event-streaming/state.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/event-streaming",
+  },
+  {
+    script: "bun run events:projections",
+    file: "src/event-streaming/projections.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/event-streaming",
+  },
+  {
+    script: "bun run events:extensions",
+    file: "src/event-streaming/extensions.ts",
+    doc: "https://docs.langchain.com/oss/javascript/langchain/event-streaming",
+  },
 ];
 
 console.log("LangChain 官网示例\n");
